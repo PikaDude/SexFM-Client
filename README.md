@@ -19,6 +19,10 @@ This app borrows some styles and assets from the real website, I hope that's oka
 
 ![screenshot](.github/screenshot.png)
 
+## Todo
+- system tray support
+- update checking
+
 ## Development
 
 Install Node and Rust, npm deps, then do `yarn tauri dev` or `yarn tauri build` depending on your favourite package manager.
