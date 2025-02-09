@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Jersey10';
+    src: url(/Jersey10.ttf);
+}
+
+body {
+    color: #000099;
+}
+
+.border-ridge {
+    border-style: ridge;
+}
+
+.button {
+    @apply flex justify-center items-center bg-gradient-to-b from-white hover:from-sexfm-400 via-white to-sexfm-400 hover:to-white p-0.5 border-sexfm-500 rounded-full cursor-pointer;
+}
