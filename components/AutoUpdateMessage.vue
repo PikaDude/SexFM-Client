@@ -5,7 +5,7 @@
         </p>
         <p>{{ message }}</p>
         <a
-            v-if="info?.status == 'error'"
+            v-if="info?.status == 'error' || info?.status == 'angry'"
             @click="manual"
         >
             Click for the downloads page
@@ -34,8 +34,8 @@ export default defineComponent({
                     return `Downloading update ${this.info.downloaded}/${this.info.contentLength} bytes.`;
                 case 'error':
                     return 'Failed to check for updates. Please check manually.';
-                case 'installing':
-                    return 'Installing update...';
+                case 'angry':
+                    return 'Update failing to install? Please download it manually.';
                 case 'ready':
                     return 'Update ready to install. Restart whenever you\'re ready.';
                 default:

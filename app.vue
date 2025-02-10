@@ -1,7 +1,10 @@
 <template>
     <div class="flex justify-center items-center h-screen select-none">
         <NuxtRouteAnnouncer />
-        <AutoUpdate @announce="onAutoUpdateAnnounce" />
+        <AutoUpdate
+            ref="autoUpdater"
+            @announce="onAutoUpdateAnnounce"
+        />
 
         <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
             <div
@@ -88,6 +91,20 @@
                 </Transition>
 
                 <div class="z-10 flex flex-col justify-center items-center gap-2">
+                    <p
+                        v-if="autoUpdateInfo?.status == 'ready'"
+                        class="top-0 absolute bg-red-300 w-full text-center"
+                    >
+                        An update will be installed once you exit
+                    </p>
+                    <p
+                        v-if="autoUpdateInfo?.status == 'angry'"
+                        class="top-0 absolute bg-red-300 w-full text-center cursor-pointer"
+                        @click="update"
+                    >
+                        Click here to install the update
+                    </p>
+
                     <img
                         src="~/assets/logo.webp"
                         class="w-4/5 logo"
@@ -180,6 +197,7 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open } from '@tauri-apps/plugin-shell';
 import { useAVBars } from 'vue-audio-visual';
+import type AutoUpdate from '~/components/AutoUpdate.vue';
 
 export default defineComponent({
     setup() {
@@ -227,6 +245,9 @@ export default defineComponent({
                     return 'https://streaming.live365.com/a25222';
             }
         },
+        autoUpdater() {
+            return this.$refs.autoUpdater as typeof AutoUpdate | undefined;
+        },
         bars() {
             return this.$refs.bars as HTMLCanvasElement | undefined;
         },
@@ -249,11 +270,15 @@ export default defineComponent({
         // TODO lol simply never unload the page (this should never happen at the moment)
     },
     methods: {
-        close() {
+        async close() {
+            await this.update();
             getCurrentWindow().close();
         },
         minimize() {
             getCurrentWindow().minimize();
+        },
+        async update() {
+            await this.autoUpdater?.install();
         },
         patreon() {
             open('https://patreon.com/SexFMLive');

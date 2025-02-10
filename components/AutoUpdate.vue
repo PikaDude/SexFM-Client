@@ -19,6 +19,7 @@ export default defineComponent({
                 contentLength: undefined,
                 message: 'No updates available',
             } as AutoUpdateInfo,
+            install: undefined as (() => Promise<void>) | undefined,
         };
     },
     mounted() {
@@ -34,40 +35,49 @@ export default defineComponent({
                 console.error(e);
                 this.info.status = 'error';
                 this.announce();
-            });
-            if (update) {
-                console.log(
-                    `found update ${update.version} from ${update.date} with notes ${update.body}`,
-                );
-                this.announce();
-
-                this.info.downloaded = 0;
-                this.info.contentLength = 0;
-                await update.downloadAndInstall((event) => {
-                    this.announce();
-
-                    switch (event.event) {
-                        case 'Started':
-                            this.info.status = 'downloading';
-                            this.info.contentLength = event.data.contentLength;
-                            console.log(`started downloading ${event.data.contentLength} bytes`);
-                            break;
-                        case 'Progress':
-                            this.info.status = 'downloading';
-                            this.info.downloaded += event.data.chunkLength;
-                            console.log(`downloaded ${this.info.downloaded} from ${this.info.contentLength}`);
-                            break;
-                        case 'Finished':
-                            this.info.status = 'installing';
-                            console.log('download finished');
-                            break;
-                    }
-                });
-
-                console.log('update installed');
-                this.info.status = 'ready';
-                this.announce();
+            }) || null;
+            if (!update) {
+                localStorage.removeItem('updateReady');
+                return;
             }
+
+            console.log(
+                `found update ${update.version} from ${update.date} with notes ${update.body}`,
+            );
+            this.announce();
+
+            this.info.downloaded = 0;
+            this.info.contentLength = 0;
+            await update.download((event) => {
+                this.announce();
+
+                switch (event.event) {
+                    case 'Started':
+                        this.info.status = 'downloading';
+                        this.info.contentLength = event.data.contentLength;
+                        console.log(`started downloading ${event.data.contentLength} bytes`);
+                        break;
+                    case 'Progress':
+                        this.info.status = 'downloading';
+                        this.info.downloaded += event.data.chunkLength;
+                        console.log(`downloaded ${this.info.downloaded} from ${this.info.contentLength}`);
+                        break;
+                    case 'Finished':
+                        // this.info.status = 'installing';
+                        console.log('download finished');
+                        break;
+                }
+            });
+
+            console.log('update ready to install');
+            this.install = async () => {
+                await update.install();
+            };
+            this.info.status = 'ready';
+            this.announce();
+
+            if (localStorage.getItem('updateReady') == 'true') this.info.status = 'angry';
+            else localStorage.setItem('updateReady', 'true');
         },
         announce() {
             this.$emit('announce', this.info);
