@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "sexfm",
+  "productName": "SexFM Player",
   "version": "1.0.0",
   "identifier": "live.sexfm",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "SexFM",
+        "title": "SexFM Player",
         "width": 284,
         "height": 427,
         "resizable": false,

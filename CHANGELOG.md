@@ -8,5 +8,7 @@
 - Update the Last Played and Help user interface to be more futuristic and cooler
 - Add a dedicated settings popup
 
+You may need to manually uninstall the previous version, sorry.
+
 ## v1.0.0
 - Initial release
