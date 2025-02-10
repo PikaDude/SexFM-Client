@@ -11,6 +11,7 @@
 - Improve font fallbacks
 - Add auto-updater... I think...
 - Add an option to select the audio format
+- Manually fixed an issue with the API where it can't decide what song is currently playing
 
 You may need to manually uninstall the previous version, sorry.
 

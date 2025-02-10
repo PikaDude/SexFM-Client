@@ -318,7 +318,9 @@ export default defineComponent({
         async onMetadataRefresh() {
             this.metadataRefreshTimeout = null;
             const response = await fetch('https://api.live365.com/station/a25222');
-            this.metadata = await response.json() as APIData; // what's the worst that could happen if we get unexpected data
+            const newData = await response.json() as APIData;
+            // what's the worst that could happen if we get unexpected data
+            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title) this.metadata = newData;
 
             if (this.metadataRefreshTimeout) {
                 clearTimeout(this.metadataRefreshTimeout);
