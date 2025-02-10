@@ -5,6 +5,8 @@
 - Make buttons look more Sex... FM
 - Add artist names to the Last Played list... whoops
 - Drastically optimize assets to reduce file size
+- Update the Last Played and Help user interface to be more futuristic and cooler
+- Add a dedicated settings popup
 
 ## v1.0.0
 - Initial release

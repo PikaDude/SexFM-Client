@@ -7,7 +7,19 @@
                 class="flex justify-between items-center bg-sexfm sex-shadow p-2"
                 data-tauri-drag-region
             >
-                <span class="text-white text-lg">SexFM</span>
+                <div class="flex items-center gap-1">
+                    <span
+                        data-tauri-drag-region
+                        class="mr-1 text-white text-lg"
+                    >SexFM</span>
+                    <div
+                        class="border button"
+                        @click="settings = !settings"
+                    >
+                        <Icon name="material-symbols:tools-wrench-outline-sharp" />
+                    </div>
+                </div>
+
                 <div class="flex items-center gap-1">
                     <div
                         class="border button"
@@ -40,7 +52,7 @@
                 />
 
                 <Transition>
-                    <LastPlayed
+                    <PopupLastPlayed
                         v-if="lastPlayed"
                         :songs="metadata['last-played']"
                         class="absolute"
@@ -48,11 +60,18 @@
                     />
                 </Transition>
                 <Transition>
-                    <Help
+                    <PopupHelp
                         v-if="help"
                         class="absolute"
-                        :visualizer="visualizer"
                         @close="help = false"
+                    />
+                </Transition>
+                <Transition>
+                    <PopupSettings
+                        v-if="settings"
+                        class="absolute"
+                        :visualizer="visualizer"
+                        @close="settings = false"
                         @visualizer-changed="onVisualizerChanged"
                     />
                 </Transition>
@@ -169,6 +188,7 @@ export default defineComponent({
                 'last-played': [],
             } as APIData,
 
+            settings: false,
             lastPlayed: false,
             help: false,
         };
@@ -279,12 +299,6 @@ export default defineComponent({
     -webkit-filter: drop-shadow(2px 2px 2px #3366CC);
 }
 
-.sex-shadow {
-    text-shadow: 4px 4px 4px blue;
-    -webkit-text-stroke-width: .1px;
-    -webkit-text-stroke-color: #00CCFF;
-}
-
 /*Safari and Chrome*/
 input[type="range"] {
     @apply bg-gray-300 overflow-hidden appearance-none;
@@ -303,11 +317,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+  transition: transform 0.5s linear; /* linear looks way cooler */
 }
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
+  transform: translateY(384px);
 }
 </style>

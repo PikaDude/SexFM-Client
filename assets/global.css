@@ -11,6 +11,42 @@ body {
     border-style: ridge;
 }
 
+.sex-shadow {
+    text-shadow: 4px 4px 4px blue;
+    -webkit-text-stroke-width: .1px;
+    -webkit-text-stroke-color: #00CCFF;
+}
+
+/* the name of this class is beyond hilarious but 99% of sex fmmers will never see it */
+/* you are a certified cool person if you see this comedy gold */
+.sox-shadow {
+    box-shadow: 0px 1px 1px 1px #0066FF inset;
+}
+
+.sex-outline {
+    outline-style: solid;
+    outline-width: 1.5px;
+}
+
 .button {
     @apply flex justify-center items-center bg-gradient-to-b from-white active:from-sexfm-400 via-white to-sexfm-400 active:to-white p-0.5 border-sexfm-500 hover:border-sexfm-300 active:border-sexfm-500 rounded-full hover:text-sexfm-300 active:text-sexfm-600 cursor-pointer;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #0099FF;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0099FF;
+    border-radius: 15px;
+    border: outset;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0066FF;
 }
