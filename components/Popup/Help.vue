@@ -3,9 +3,8 @@
         title="SexFM Desktop Player"
         close-message="Awesome, I fucking love SexFM"
     >
-        <p class="text-center">
-            v{{ version }}
-        </p>
+        <AutoUpdateMessage :info="autoUpdateInfo" />
+        <br>
         <p>SexFM's official website can be found at <a @click="sex">sexfm.live</a>. Find all their links there. Click on all of them.</p>
         <br>
         <p>
@@ -33,16 +32,11 @@
 
 <script lang="ts">
 import { open } from '@tauri-apps/plugin-shell';
-import { getVersion } from '@tauri-apps/api/app';
+import { object } from 'vue-types';
 
 export default defineComponent({
-    data() {
-        return {
-            version: '???',
-        };
-    },
-    async mounted() {
-        this.version = await getVersion();
+    props: {
+        autoUpdateInfo: object<AutoUpdateInfo>(),
     },
     methods: {
         dot() {

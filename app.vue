@@ -1,6 +1,7 @@
 <template>
     <div class="flex justify-center items-center h-screen select-none">
         <NuxtRouteAnnouncer />
+        <AutoUpdate @announce="onAutoUpdateAnnounce" />
 
         <div class="box-border flex flex-col drop-shadow-sex border-4 border-sexfm-400 border-ridge rounded-xl w-[90%] h-[90%] overflow-hidden">
             <div
@@ -72,6 +73,7 @@
                         v-if="settings"
                         class="absolute"
 
+                        :auto-update-info="autoUpdateInfo"
                         :visualizer="visualizer"
                         :audio-format="audioFormat"
 
@@ -201,6 +203,7 @@ export default defineComponent({
                 },
                 'last-played': [],
             } as APIData,
+            autoUpdateInfo: undefined as AutoUpdateInfo | undefined,
 
             settings: false,
             lastPlayed: false,
@@ -211,7 +214,6 @@ export default defineComponent({
     },
     computed: {
         src() {
-            console.log(this.audioFormat);
             switch (this.audioFormat) {
                 case 'AAC':
                     return 'https://streaming.live365.com/a25222_2';
@@ -308,6 +310,9 @@ export default defineComponent({
             this.audioKey = new Date().toISOString();
             this.audioFormat = value;
             localStorage.setItem('audioFormat', value.toString());
+        },
+        onAutoUpdateAnnounce(value: AutoUpdateInfo) {
+            this.autoUpdateInfo = value;
         },
         async onMetadataRefresh() {
             this.metadataRefreshTimeout = null;
