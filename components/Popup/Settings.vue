@@ -1,7 +1,7 @@
 <template>
     <PopupBase
         title="Settings"
-        close-message="Okay Sick"
+        close-message="Fly."
     >
         <AutoUpdateMessage :info="autoUpdateInfo" />
         <br>

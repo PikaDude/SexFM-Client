@@ -1,7 +1,7 @@
 <template>
     <PopupBase
         title="Last Played"
-        close-message="Okay Cool"
+        close-message="Tubular."
     >
         <ol class="select-text list-decimal list-inside">
             <li

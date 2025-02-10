@@ -44,14 +44,17 @@
             </div>
 
             <div class="relative flex flex-col justify-center items-center gap-2 bg-sex bg-cover p-4 h-full">
-                <canvas
-                    v-show="visualizer"
-                    ref="bars"
-                    :key="audioKey"
-                    width="256"
-                    height="384"
-                    class="bottom-0 absolute opacity-20 pointer-events-none"
-                />
+                <div class="bottom-0 absolute flex flex-col w-full">
+                    <canvas
+                        v-show="visualizer"
+                        ref="bars"
+                        :key="audioKey"
+                        width="256"
+                        height="192"
+                        class="opacity-20 pointer-events-none"
+                    />
+                    <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
+                </div>
 
                 <Transition>
                     <PopupLastPlayed
@@ -84,7 +87,7 @@
                     />
                 </Transition>
 
-                <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
+                <div class="z-10 flex flex-col justify-center items-center gap-2">
                     <img
                         src="~/assets/logo.webp"
                         class="w-4/5 logo"
@@ -112,7 +115,7 @@
                         />
                         <Icon
                             v-show="!paused && loading"
-                            name="material-symbols:phone-callback"
+                            name="eos-icons:hourglass"
                             size="64"
                         />
                     </div>
@@ -175,6 +178,7 @@
 
 <script lang="ts">
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { open } from '@tauri-apps/plugin-shell';
 import { useAVBars } from 'vue-audio-visual';
 
 export default defineComponent({
@@ -251,6 +255,9 @@ export default defineComponent({
         minimize() {
             getCurrentWindow().minimize();
         },
+        patreon() {
+            open('https://patreon.com/SexFMLive');
+        },
 
         playpause() {
             const player = this.player;
@@ -277,7 +284,7 @@ export default defineComponent({
             // there's no good way to unload or refresh AVBars since it's not at all flexible
             // this somehow doesn't appear to cause a noticeable memory leak on chromium so that's neat i guess
             // i should probably open up a github issue on vue-audio-visual for this but i'm lazy
-            useAVBars(this.player, this.bars, { src: this.src, canvHeight: 256, canvWidth: 384, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+            useAVBars(this.player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
         },
 
         onFrame() {

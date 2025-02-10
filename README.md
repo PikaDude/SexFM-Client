@@ -1,8 +1,8 @@
-# SexFM UNOFFICIAL Player
+# SexFM Unofficial Player
 
-This is an UNOFFICIAL SexFM Desktop Player. Find the official SexFM website at [sexfm.live](https://sexfm.live).
+This is an Unofficial SexFM Desktop Player. Find the official SexFM website at [sexfm.live](https://sexfm.live).
 
-This app borrows some styles and assets from the real website, I hope that's okay. If it isn't let me know.
+This app borrows some styles and assets from the real website that was made by [Dot](https://dotagotchi.com/).
 
 ## Features
 - The radio
@@ -14,6 +14,7 @@ This app borrows some styles and assets from the real website, I hope that's oka
 - Integration with your Operating System's media controls
 - No offline support
 - Honestly not that lightweight or performant oops
+- Auto-update support (that hopefully works)
 
 ## Screenshot
 
@@ -21,10 +22,9 @@ This app borrows some styles and assets from the real website, I hope that's oka
 
 ## Todo
 - system tray support
-- update checking
 
 ## Development
 
-Install Node and Rust, npm deps, then do `yarn tauri dev` or `yarn tauri build` depending on your favourite package manager.
+Install Node and Rust, npm deps, then do `yarn tauri dev` or `yarn tauri build` using your favourite package manager.
 
 it's past 3am i am tired.

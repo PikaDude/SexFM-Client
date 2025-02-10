@@ -582,6 +582,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.1.tgz#9a96ce501bc62df46c4031fbd970e3cc6b10f07b"
   integrity sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==
 
+"@iconify-json/eos-icons@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iconify-json/eos-icons/-/eos-icons-1.2.2.tgz#6b4a3c3ae25942216154388d71b9a471c71196ca"
+  integrity sha512-kYfV1WfgiHDbWdG9JEbV1K77MvksRmo9KIM4VjtYFMnF8pKqTv4MoLIOdCD2lbRlhBZspxr1GKde5Z/LYqz3Qw==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-json/material-symbols@1.2.14":
   version "1.2.14"
   resolved "https://registry.yarnpkg.com/@iconify-json/material-symbols/-/material-symbols-1.2.14.tgz#6cf20ebb0e28a21fb4c0accc91da65761fc3e84b"

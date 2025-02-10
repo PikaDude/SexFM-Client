@@ -4,7 +4,10 @@
             Version {{ version }}
         </p>
         <p>{{ message }}</p>
-        <a @click="manual">
+        <a
+            v-if="info?.status == 'error'"
+            @click="manual"
+        >
             Click for the downloads page
         </a>
     </div>
