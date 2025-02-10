@@ -9,6 +9,7 @@
 - Add a dedicated settings popup
 - Fix pausing causing desync from the live stream
 - Improve font fallbacks
+- Add auto-updater... I think...
 
 You may need to manually uninstall the previous version, sorry.
 

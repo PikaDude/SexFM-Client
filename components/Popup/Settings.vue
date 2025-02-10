@@ -4,8 +4,14 @@
         close-message="Okay Sick"
     >
         <p class="text-center">
-            v{{ version }}
+            Version {{ version }}
         </p>
+        <a
+            class="text-center"
+            @click="manual"
+        >
+            Click to check for updates
+        </a>
         <br>
         <!-- I LOVE DISPLAY:FLEX I USE IT EVERYWHERE CAN RECOMMEND -->
         <div class="flex items-center gap-2">
@@ -29,6 +35,7 @@
 
 <script lang="ts">
 import { getVersion } from '@tauri-apps/api/app';
+import { open } from '@tauri-apps/plugin-shell';
 import { bool } from 'vue-types';
 
 export default defineComponent({
@@ -45,6 +52,10 @@ export default defineComponent({
         this.version = await getVersion();
     },
     methods: {
+        manual() {
+            open('https://github.com/PikaDude/SexFM-Player/releases');
+        },
+
         onVisualizerChange() {
             this.$emit('visualizerChanged', !this.visualizer);
         },
