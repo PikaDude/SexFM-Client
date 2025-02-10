@@ -17,6 +17,13 @@
             >
             <label for="visualizer">Music Visualizer</label>
         </div>
+        <br>
+        <div class="flex justify-center">
+            <img
+                src="~/assets/rotate.gif"
+                class="pixelated"
+            >
+        </div>
     </PopupBase>
 </template>
 

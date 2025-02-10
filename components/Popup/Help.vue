@@ -17,6 +17,17 @@
         <p>You can find more information about this player on <a @click="github">GitHub</a>.</p>
         <br>
         <p>Some styles/code/assets were borrowed from the official website that was made by <a @click="dot">Dot</a>.</p>
+        <div
+            class="flex flex-col items-center"
+        >
+            <br>
+            <img
+                class="pixelated"
+                src="~/assets/ilovesexfm.gif"
+            >
+            <br>
+            <p>CopySEX 1999</p>
+        </div>
     </PopupBase>
 </template>
 
