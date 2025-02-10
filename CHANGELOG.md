@@ -7,6 +7,7 @@
 - Drastically optimize assets to reduce file size
 - Update the Last Played and Help user interface to be more futuristic and cooler
 - Add a dedicated settings popup
+- Fix pausing causing desync from the live stream
 
 You may need to manually uninstall the previous version, sorry.
 

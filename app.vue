@@ -46,6 +46,7 @@
                 <canvas
                     v-show="visualizer"
                     ref="bars"
+                    :key="audioKey"
                     width="256"
                     height="384"
                     class="bottom-0 absolute opacity-20 pointer-events-none"
@@ -89,6 +90,7 @@
 
                     <div
                         class="border-2 button"
+                        :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer' }"
                         @click="playpause"
                     >
                         <Icon
@@ -97,8 +99,13 @@
                             size="64"
                         />
                         <Icon
-                            v-show="!paused"
+                            v-show="!paused && !loading"
                             name="material-symbols:pause"
+                            size="64"
+                        />
+                        <Icon
+                            v-show="!paused && loading"
+                            name="material-symbols:phone-callback"
                             size="64"
                         />
                     </div>
@@ -149,9 +156,11 @@
 
             <audio
                 ref="player"
+                :key="audioKey"
                 hidden
                 :src="src"
                 crossorigin="anonymous"
+                preload="none"
             />
         </div>
     </div>
@@ -175,6 +184,7 @@ export default defineComponent({
             src: 'https://streaming.live365.com/a25222',
 
             paused: true,
+            loading: false,
             volume: 0.5,
             muted: false,
             visualizer: true,
@@ -191,6 +201,8 @@ export default defineComponent({
             settings: false,
             lastPlayed: false,
             help: false,
+
+            audioKey: new Date().toISOString(),
         };
     },
     computed: {
@@ -210,8 +222,6 @@ export default defineComponent({
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
         this.onMetadataRefresh();
-
-        useAVBars(this.player, this.bars, { src: this.src, canvHeight: 256, canvWidth: 384, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -227,8 +237,14 @@ export default defineComponent({
         playpause() {
             const player = this.player;
             if (player) {
-                if (player.paused) player.play();
-                else player.pause();
+                if (player.paused) {
+                    player.play();
+                    this.initializeVisualizer();
+                }
+                else {
+                    player.pause();
+                    this.audioKey = new Date().toISOString();
+                }
             }
         },
         toggleMute() {
@@ -236,11 +252,22 @@ export default defineComponent({
             this.muted = !muted;
             if (this.player) this.player.muted = !muted;
         },
+        initializeVisualizer() {
+            // every time the user pauses the radio and restarts it, we initialize a new AVBars
+            // why? well, in the scenario we don't do this, if the user pauses the radio and restarts it, and we reload the audio source to force a reconnect (instead of the entire audio/canvas element), the audio *doubles* in volume because of AVBars
+            // there's no good way to unload or refresh AVBars since it's not at all flexible
+            // this somehow doesn't appear to cause a noticeable memory leak on chromium so that's neat i guess
+            // i should probably open up a github issue on vue-audio-visual for this but i'm lazy
+            useAVBars(this.player, this.bars, { src: this.src, canvHeight: 256, canvWidth: 384, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+        },
 
         onFrame() {
             // the best way to catch it if the user pauses the player using media controls or if the stream cuts out
             const player = this.player;
-            if (player) this.paused = player.paused;
+            if (player) {
+                this.paused = player.paused;
+                this.loading = player.readyState < 3;
+            }
 
             requestAnimationFrame(this.onFrame);
 
