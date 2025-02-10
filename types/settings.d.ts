@@ -1,9 +1,8 @@
 type AudioFormat = 'MP3' | 'AAC';
 
-type AutoUpdateStatus = 'error' | 'nothing' | 'downloading' | 'installing' | 'ready';
+type AutoUpdateStatus = 'error' | 'nothing' | 'downloading' | 'ready' | 'angry';
 interface AutoUpdateInfo {
     status: AutoUpdateStatus
     downloaded: number
     contentLength: number | undefined
-    message: string
 }
