@@ -186,7 +186,6 @@ export default defineComponent({
 
         this.volume = Number(localStorage.getItem('volume') || '0.5');
         this.visualizer = localStorage.getItem('visualizer') != 'false';
-        console.log(this.visualizer);
 
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
@@ -245,7 +244,6 @@ export default defineComponent({
             this.metadataRefreshTimeout = null;
             const response = await fetch('https://api.live365.com/station/a25222');
             this.metadata = await response.json() as APIData; // what's the worst that could happen if we get unexpected data
-            console.log(this.metadata);
 
             if (this.metadataRefreshTimeout) {
                 clearTimeout(this.metadataRefreshTimeout);
