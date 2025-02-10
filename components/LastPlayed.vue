@@ -3,7 +3,7 @@
         class="z-20 flex justify-center items-center backdrop-blur-md w-full h-full"
     >
         <div
-            class="bg-white p-4 rounded-lg w-[90%]"
+            class="bg-white p-4 rounded-lg w-[90%] max-h-[90%] overflow-y-auto"
         >
             <p class="text-xl text-center leading-none">
                 Last Played
@@ -14,7 +14,7 @@
                     v-for="(song, i) in songs"
                     :key="i"
                 >
-                    {{ song.title }}
+                    {{ song.title }} by {{ song.artist }}
                 </li>
             </ol>
 
