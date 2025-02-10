@@ -11,7 +11,7 @@
                 <div class="flex items-center gap-1">
                     <div
                         class="border button"
-                        @click="help = true"
+                        @click="help = !help"
                     >
                         <Icon name="material-symbols:question-mark" />
                     </div>
