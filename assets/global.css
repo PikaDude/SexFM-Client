@@ -24,7 +24,8 @@ a {
     @apply text-sexfm-300 underline cursor-pointer;
 }
 
-.border-ridge {
+.sex-border {
+    @apply box-border border-4 border-sexfm-400;
     border-style: ridge;
 }
 
@@ -51,6 +52,10 @@ a {
 
 .pixelated {
     image-rendering: pixelated;
+}
+
+select {
+    @apply border-2 border-sexfm-300;
 }
 
 ::-webkit-scrollbar {

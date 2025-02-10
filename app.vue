@@ -3,7 +3,7 @@
         <NuxtRouteAnnouncer />
         <AutoUpdate @announce="onAutoUpdateAnnounce" />
 
-        <div class="box-border flex flex-col drop-shadow-sex border-4 border-sexfm-400 border-ridge rounded-xl w-[90%] h-[90%] overflow-hidden">
+        <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
             <div
                 class="flex justify-between items-center bg-sexfm sex-shadow p-2"
                 data-tauri-drag-region
@@ -65,6 +65,7 @@
                     <PopupHelp
                         v-if="help"
                         class="absolute"
+                        :auto-update-info="autoUpdateInfo"
                         @close="help = false"
                     />
                 </Transition>
