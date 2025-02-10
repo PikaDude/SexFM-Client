@@ -71,9 +71,13 @@
                     <PopupSettings
                         v-if="settings"
                         class="absolute"
+
                         :visualizer="visualizer"
+                        :audio-format="audioFormat"
+
                         @close="settings = false"
                         @visualizer-changed="onVisualizerChanged"
+                        @audio-format-changed="onAudioFormatChanged"
                     />
                 </Transition>
 
@@ -181,13 +185,13 @@ export default defineComponent({
     },
     data() {
         return {
-            src: 'https://streaming.live365.com/a25222',
-
             paused: true,
             loading: false,
+
             volume: 0.5,
             muted: false,
             visualizer: true,
+            audioFormat: 'MP3' as AudioFormat,
 
             metadataRefreshTimeout: null as null | NodeJS.Timeout,
             metadata: {
@@ -206,6 +210,16 @@ export default defineComponent({
         };
     },
     computed: {
+        src() {
+            console.log(this.audioFormat);
+            switch (this.audioFormat) {
+                case 'AAC':
+                    return 'https://streaming.live365.com/a25222_2';
+                default:
+                case 'MP3':
+                    return 'https://streaming.live365.com/a25222';
+            }
+        },
         bars() {
             return this.$refs.bars as HTMLCanvasElement | undefined;
         },
@@ -218,6 +232,7 @@ export default defineComponent({
 
         this.volume = Number(localStorage.getItem('volume') || '0.5');
         this.visualizer = localStorage.getItem('visualizer') != 'false';
+        this.audioFormat = (localStorage.getItem('audioFormat') || 'MP3') as AudioFormat;
 
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
@@ -238,6 +253,7 @@ export default defineComponent({
             const player = this.player;
             if (player) {
                 if (player.paused) {
+                    player.volume = this.volume;
                     player.play();
                     this.initializeVisualizer();
                 }
@@ -286,6 +302,12 @@ export default defineComponent({
         onVisualizerChanged(value: boolean) {
             this.visualizer = value;
             localStorage.setItem('visualizer', value.toString());
+        },
+        onAudioFormatChanged(value: AudioFormat) {
+            this.player?.pause();
+            this.audioKey = new Date().toISOString();
+            this.audioFormat = value;
+            localStorage.setItem('audioFormat', value.toString());
         },
         async onMetadataRefresh() {
             this.metadataRefreshTimeout = null;
