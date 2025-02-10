@@ -46,19 +46,7 @@
                 </div>
             </div>
 
-            <div class="relative flex flex-col justify-center items-center gap-2 bg-sex bg-cover p-4 h-full">
-                <div class="bottom-0 absolute flex flex-col w-full">
-                    <canvas
-                        v-show="visualizer"
-                        ref="bars"
-                        :key="audioKey"
-                        width="256"
-                        height="192"
-                        class="opacity-20 pointer-events-none"
-                    />
-                    <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
-                </div>
-
+            <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
                 <Transition>
                     <PopupLastPlayed
                         v-if="lastPlayed"
@@ -90,95 +78,108 @@
                     />
                 </Transition>
 
-                <div class="z-10 flex flex-col justify-center items-center gap-2">
-                    <p
-                        v-if="autoUpdateInfo?.status == 'ready'"
-                        class="top-0 absolute bg-red-300 w-full text-center"
-                    >
-                        An update will be installed once you exit
-                    </p>
-                    <p
-                        v-if="autoUpdateInfo?.status == 'angry'"
-                        class="top-0 absolute bg-red-300 w-full text-center cursor-pointer"
-                        @click="update"
-                    >
-                        Click here to install the update
-                    </p>
+                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 h-full">
+                    <canvas
+                        v-show="visualizer"
+                        ref="bars"
+                        :key="audioKey"
+                        width="256"
+                        height="192"
+                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none"
+                    />
 
-                    <img
-                        src="~/assets/logo.webp"
-                        class="w-4/5 logo"
-                    >
+                    <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
+                        <p
+                            v-if="autoUpdateInfo?.status == 'ready'"
+                            class="top-0 absolute bg-red-300 w-full text-center"
+                        >
+                            An update will be installed once you exit
+                        </p>
+                        <p
+                            v-if="autoUpdateInfo?.status == 'angry'"
+                            class="top-0 absolute bg-red-300 w-full text-center cursor-pointer"
+                            @click="update"
+                        >
+                            Click here to install the update
+                        </p>
 
-                    <div class="flex flex-col text-center">
-                        <span class="text-lg select-text">{{ metadata['current-track'].title }}</span>
-                        <span class="select-text">{{ metadata['current-track'].artist }}</span>
-                    </div>
+                        <img
+                            src="~/assets/logo.webp"
+                            class="pb-1 w-4/5 logo"
+                        >
 
-                    <div
-                        class="border-2 button"
-                        :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer' }"
-                        @click="playpause"
-                    >
-                        <Icon
-                            v-show="paused"
-                            name="material-symbols:play-arrow"
-                            size="64"
-                        />
-                        <Icon
-                            v-show="!paused && !loading"
-                            name="material-symbols:pause"
-                            size="64"
-                        />
-                        <Icon
-                            v-show="!paused && loading"
-                            name="eos-icons:hourglass"
-                            size="64"
-                        />
-                    </div>
+                        <div class="flex flex-col gap-1 text-center">
+                            <span class="text-lg leading-none select-text">{{ metadata['current-track'].title }}</span>
+                            <span class="leading-none select-text">{{ metadata['current-track'].artist }}</span>
+                        </div>
 
-                    <div class="flex justify-center items-center gap-1">
                         <div
-                            class="flex justify-center items-center border button"
-                            @click="toggleMute"
+                            class="border-2 button"
+                            :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer' }"
+                            @click="playpause"
                         >
                             <Icon
-                                v-show="volume > 0.5 && !muted"
-                                name="material-symbols:volume-up"
+                                v-show="paused"
+                                name="material-symbols:play-arrow"
+                                size="64"
                             />
                             <Icon
-                                v-show="volume <= 0.5 && volume != 0 && !muted"
-                                name="material-symbols:volume-down"
+                                v-show="!paused && !loading"
+                                name="material-symbols:pause"
+                                size="64"
                             />
                             <Icon
-                                v-show="volume == 0 || muted"
-                                name="material-symbols:volume-off"
+                                v-show="!paused && loading"
+                                name="eos-icons:hourglass"
+                                size="64"
                             />
                         </div>
-                        <div class="relative">
-                            <span class="left-1 absolute">{{ Math.floor(volume * 100) }}%</span>
-                            <input
-                                v-model="volume"
-                                type="range"
-                                max="1"
-                                min="0"
-                                step="0.01"
-                                @input="onVolumeChange"
-                                @change="onVolumeSet"
-                            >
-                        </div>
-                    </div>
 
-                    <div
-                        class="flex justify-center items-center gap-2 px-[10px!important] border button"
-                        @click="lastPlayed = true"
-                    >
-                        <Icon
-                            name="material-symbols:menu"
-                        />
-                        <span>Last Played</span>
+                        <div class="flex justify-center items-center gap-1">
+                            <div
+                                class="flex justify-center items-center border button"
+                                @click="toggleMute"
+                            >
+                                <Icon
+                                    v-show="volume > 0.5 && !muted"
+                                    name="material-symbols:volume-up"
+                                />
+                                <Icon
+                                    v-show="volume <= 0.5 && volume != 0 && !muted"
+                                    name="material-symbols:volume-down"
+                                />
+                                <Icon
+                                    v-show="volume == 0 || muted"
+                                    name="material-symbols:volume-off"
+                                />
+                            </div>
+                            <div class="relative">
+                                <span class="left-1 absolute">{{ Math.floor(volume * 100) }}%</span>
+                                <input
+                                    v-model="volume"
+                                    type="range"
+                                    max="1"
+                                    min="0"
+                                    step="0.01"
+                                    @input="onVolumeChange"
+                                    @change="onVolumeSet"
+                                >
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex justify-center items-center gap-2 px-[10px!important] border button"
+                            @click="lastPlayed = true"
+                        >
+                            <Icon
+                                name="material-symbols:menu"
+                            />
+                            <span>Last Played</span>
+                        </div>
                     </div>
                 </div>
+
+                <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
             </div>
 
             <audio
@@ -278,7 +279,7 @@ export default defineComponent({
             getCurrentWindow().minimize();
         },
         async update() {
-            await this.autoUpdater?.install();
+            if (this.autoUpdater && this.autoUpdater.install) await this.autoUpdater.install();
         },
         patreon() {
             open('https://patreon.com/SexFMLive');
