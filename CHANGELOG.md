@@ -8,6 +8,7 @@
 - Update the Last Played and Help user interface to be more futuristic and cooler
 - Add a dedicated settings popup
 - Fix pausing causing desync from the live stream
+- Improve font fallbacks
 
 You may need to manually uninstall the previous version, sorry.
 

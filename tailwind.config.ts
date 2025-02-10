@@ -17,7 +17,7 @@ export default {
                 },
             },
             fontFamily: {
-                sans: ['Jersey10'],
+                sans: ['Jersey10', 'ui-sans-serif', 'system-ui', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
             },
             dropShadow: {
                 sex: '0 8px 8px rgba(0, 0, 0, 0.5)',
