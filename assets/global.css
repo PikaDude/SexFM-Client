@@ -7,6 +7,10 @@ body {
     @apply text-sexfm-600
 }
 
+a {
+    @apply text-sexfm-300 underline cursor-pointer;
+}
+
 .border-ridge {
     border-style: ridge;
 }

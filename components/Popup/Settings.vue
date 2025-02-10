@@ -44,9 +44,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped>
-a {
-    @apply text-sexfm-300 underline cursor-pointer;
-}
-</style>
