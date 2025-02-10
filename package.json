@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/icon": "1.10.3",
     "@tauri-apps/api": "2.2.0",
+    "@tauri-apps/plugin-updater": "2.5.0",
     "nuxt": "3.15.4",
     "vue": "3.5.13",
     "vue-audio-visual": "3.0.9",
@@ -19,6 +20,7 @@
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447",
   "devDependencies": {
+    "@iconify-json/eos-icons": "^1.2.2",
     "@iconify-json/material-symbols": "1.2.14",
     "@nuxt/eslint": "1.0.0",
     "@nuxtjs/tailwindcss": "6.13.1",

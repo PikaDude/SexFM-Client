@@ -582,6 +582,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.1.tgz#9a96ce501bc62df46c4031fbd970e3cc6b10f07b"
   integrity sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==
 
+"@iconify-json/eos-icons@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iconify-json/eos-icons/-/eos-icons-1.2.2.tgz#6b4a3c3ae25942216154388d71b9a471c71196ca"
+  integrity sha512-kYfV1WfgiHDbWdG9JEbV1K77MvksRmo9KIM4VjtYFMnF8pKqTv4MoLIOdCD2lbRlhBZspxr1GKde5Z/LYqz3Qw==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-json/material-symbols@1.2.14":
   version "1.2.14"
   resolved "https://registry.yarnpkg.com/@iconify-json/material-symbols/-/material-symbols-1.2.14.tgz#6cf20ebb0e28a21fb4c0accc91da65761fc3e84b"
@@ -1476,6 +1483,13 @@
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@tauri-apps/plugin-shell/-/plugin-shell-2.2.0.tgz#3a52375457ae8358666ff80a968cc93d92573abf"
   integrity sha512-iC3Ic1hLmasoboG7BO+7p+AriSoqAwKrIk+Hpk+S/bjTQdXqbl2GbdclghI4gM32X0bls7xHzIFqhRdrlvJeaA==
+  dependencies:
+    "@tauri-apps/api" "^2.0.0"
+
+"@tauri-apps/plugin-updater@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/plugin-updater/-/plugin-updater-2.5.0.tgz#59d40eb378e4735583f253d942efd044ab16d2df"
+  integrity sha512-CWpwrkgpMESDPgJ0EuXgQTI/U9zeZQ9NLUvMyuWVrsuRez7tJ/3c7y73LAkvkI6+ekUxVaRJrxYrSfd8W+DRvQ==
   dependencies:
     "@tauri-apps/api" "^2.0.0"
 

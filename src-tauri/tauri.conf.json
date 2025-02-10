@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "sexfm",
-  "version": "1.0.0",
+  "productName": "SexFM Player",
+  "version": "1.1.0",
   "identifier": "live.sexfm",
   "build": {
     "frontendDist": "../dist",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "SexFM",
+        "title": "SexFM Player",
         "width": 284,
         "height": 427,
         "resizable": false,
@@ -36,6 +36,15 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyQUVDQjRBNzJBNEUwQjAKUldTdzRLUnlTc3V1SWxsQVc4RzlZZll5RlNITFI0VlFZYjVUZjVPOUg4M1lMbkkrdTBjckF6cFQK",
+      "endpoints": [
+        "https://github.com/PikaDude/SexFM-Player/releases/latest/download/latest.json"
+      ]
+    }
   }
 }

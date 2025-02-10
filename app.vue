@@ -1,17 +1,30 @@
 <template>
     <div class="flex justify-center items-center h-screen select-none">
         <NuxtRouteAnnouncer />
+        <AutoUpdate @announce="onAutoUpdateAnnounce" />
 
-        <div class="box-border flex flex-col drop-shadow-sex border-4 border-sexfm-400 border-ridge rounded-xl w-[90%] h-[90%] overflow-hidden">
+        <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
             <div
                 class="flex justify-between items-center bg-sexfm sex-shadow p-2"
                 data-tauri-drag-region
             >
-                <span class="text-white text-lg">SexFM</span>
+                <div class="flex items-center gap-1">
+                    <span
+                        data-tauri-drag-region
+                        class="mr-1 text-white text-lg"
+                    >SexFM</span>
+                    <div
+                        class="border button"
+                        @click="settings = !settings"
+                    >
+                        <Icon name="material-symbols:tools-wrench-outline-sharp" />
+                    </div>
+                </div>
+
                 <div class="flex items-center gap-1">
                     <div
                         class="border button"
-                        @click="help = true"
+                        @click="help = !help"
                     >
                         <Icon name="material-symbols:question-mark" />
                     </div>
@@ -31,16 +44,20 @@
             </div>
 
             <div class="relative flex flex-col justify-center items-center gap-2 bg-sex bg-cover p-4 h-full">
-                <canvas
-                    v-show="visualizer"
-                    ref="bars"
-                    width="256"
-                    height="384"
-                    class="bottom-0 absolute opacity-20 pointer-events-none"
-                />
+                <div class="bottom-0 absolute flex flex-col w-full">
+                    <canvas
+                        v-show="visualizer"
+                        ref="bars"
+                        :key="audioKey"
+                        width="256"
+                        height="192"
+                        class="opacity-20 pointer-events-none"
+                    />
+                    <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
+                </div>
 
                 <Transition>
-                    <LastPlayed
+                    <PopupLastPlayed
                         v-if="lastPlayed"
                         :songs="metadata['last-played']"
                         class="absolute"
@@ -48,18 +65,31 @@
                     />
                 </Transition>
                 <Transition>
-                    <Help
+                    <PopupHelp
                         v-if="help"
                         class="absolute"
-                        :visualizer="visualizer"
+                        :auto-update-info="autoUpdateInfo"
                         @close="help = false"
+                    />
+                </Transition>
+                <Transition>
+                    <PopupSettings
+                        v-if="settings"
+                        class="absolute"
+
+                        :auto-update-info="autoUpdateInfo"
+                        :visualizer="visualizer"
+                        :audio-format="audioFormat"
+
+                        @close="settings = false"
                         @visualizer-changed="onVisualizerChanged"
+                        @audio-format-changed="onAudioFormatChanged"
                     />
                 </Transition>
 
-                <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
+                <div class="z-10 flex flex-col justify-center items-center gap-2">
                     <img
-                        src="~/assets/logo.png"
+                        src="~/assets/logo.webp"
                         class="w-4/5 logo"
                     >
 
@@ -70,6 +100,7 @@
 
                     <div
                         class="border-2 button"
+                        :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer' }"
                         @click="playpause"
                     >
                         <Icon
@@ -78,8 +109,13 @@
                             size="64"
                         />
                         <Icon
-                            v-show="!paused"
+                            v-show="!paused && !loading"
                             name="material-symbols:pause"
+                            size="64"
+                        />
+                        <Icon
+                            v-show="!paused && loading"
+                            name="eos-icons:hourglass"
                             size="64"
                         />
                     </div>
@@ -130,9 +166,11 @@
 
             <audio
                 ref="player"
+                :key="audioKey"
                 hidden
                 :src="src"
                 crossorigin="anonymous"
+                preload="none"
             />
         </div>
     </div>
@@ -140,6 +178,7 @@
 
 <script lang="ts">
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { open } from '@tauri-apps/plugin-shell';
 import { useAVBars } from 'vue-audio-visual';
 
 export default defineComponent({
@@ -147,18 +186,19 @@ export default defineComponent({
         useHead({
             title: 'SexFM',
             link: [
-                { rel: 'preload', href: '/Jersey10.ttf', as: 'font', type: 'font/ttf', crossorigin: 'anonymous' },
+                { rel: 'preload', href: '/Jersey10.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
             ],
         });
     },
     data() {
         return {
-            src: 'https://streaming.live365.com/a25222',
-
             paused: true,
+            loading: false,
+
             volume: 0.5,
             muted: false,
             visualizer: true,
+            audioFormat: 'MP3' as AudioFormat,
 
             metadataRefreshTimeout: null as null | NodeJS.Timeout,
             metadata: {
@@ -168,12 +208,25 @@ export default defineComponent({
                 },
                 'last-played': [],
             } as APIData,
+            autoUpdateInfo: undefined as AutoUpdateInfo | undefined,
 
+            settings: false,
             lastPlayed: false,
             help: false,
+
+            audioKey: new Date().toISOString(),
         };
     },
     computed: {
+        src() {
+            switch (this.audioFormat) {
+                case 'AAC':
+                    return 'https://streaming.live365.com/a25222_2';
+                default:
+                case 'MP3':
+                    return 'https://streaming.live365.com/a25222';
+            }
+        },
         bars() {
             return this.$refs.bars as HTMLCanvasElement | undefined;
         },
@@ -186,13 +239,11 @@ export default defineComponent({
 
         this.volume = Number(localStorage.getItem('volume') || '0.5');
         this.visualizer = localStorage.getItem('visualizer') != 'false';
-        console.log(this.visualizer);
+        this.audioFormat = (localStorage.getItem('audioFormat') || 'MP3') as AudioFormat;
 
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
         this.onMetadataRefresh();
-
-        useAVBars(this.player, this.bars, { src: this.src, canvHeight: 256, canvWidth: 384, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -204,12 +255,22 @@ export default defineComponent({
         minimize() {
             getCurrentWindow().minimize();
         },
+        patreon() {
+            open('https://patreon.com/SexFMLive');
+        },
 
         playpause() {
             const player = this.player;
             if (player) {
-                if (player.paused) player.play();
-                else player.pause();
+                if (player.paused) {
+                    player.volume = this.volume;
+                    player.play();
+                    this.initializeVisualizer();
+                }
+                else {
+                    player.pause();
+                    this.audioKey = new Date().toISOString();
+                }
             }
         },
         toggleMute() {
@@ -217,11 +278,22 @@ export default defineComponent({
             this.muted = !muted;
             if (this.player) this.player.muted = !muted;
         },
+        initializeVisualizer() {
+            // every time the user pauses the radio and restarts it, we initialize a new AVBars
+            // why? well, in the scenario we don't do this, if the user pauses the radio and restarts it, and we reload the audio source to force a reconnect (instead of the entire audio/canvas element), the audio *doubles* in volume because of AVBars
+            // there's no good way to unload or refresh AVBars since it's not at all flexible
+            // this somehow doesn't appear to cause a noticeable memory leak on chromium so that's neat i guess
+            // i should probably open up a github issue on vue-audio-visual for this but i'm lazy
+            useAVBars(this.player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+        },
 
         onFrame() {
             // the best way to catch it if the user pauses the player using media controls or if the stream cuts out
             const player = this.player;
-            if (player) this.paused = player.paused;
+            if (player) {
+                this.paused = player.paused;
+                this.loading = player.readyState < 3;
+            }
 
             requestAnimationFrame(this.onFrame);
 
@@ -241,11 +313,21 @@ export default defineComponent({
             this.visualizer = value;
             localStorage.setItem('visualizer', value.toString());
         },
+        onAudioFormatChanged(value: AudioFormat) {
+            this.player?.pause();
+            this.audioKey = new Date().toISOString();
+            this.audioFormat = value;
+            localStorage.setItem('audioFormat', value.toString());
+        },
+        onAutoUpdateAnnounce(value: AutoUpdateInfo) {
+            this.autoUpdateInfo = value;
+        },
         async onMetadataRefresh() {
             this.metadataRefreshTimeout = null;
             const response = await fetch('https://api.live365.com/station/a25222');
-            this.metadata = await response.json() as APIData; // what's the worst that could happen if we get unexpected data
-            console.log(this.metadata);
+            const newData = await response.json() as APIData;
+            // what's the worst that could happen if we get unexpected data
+            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title) this.metadata = newData;
 
             if (this.metadataRefreshTimeout) {
                 clearTimeout(this.metadataRefreshTimeout);
@@ -281,12 +363,6 @@ export default defineComponent({
     -webkit-filter: drop-shadow(2px 2px 2px #3366CC);
 }
 
-.sex-shadow {
-    text-shadow: 4px 4px 4px blue;
-    -webkit-text-stroke-width: .1px;
-    -webkit-text-stroke-color: #00CCFF;
-}
-
 /*Safari and Chrome*/
 input[type="range"] {
     @apply bg-gray-300 overflow-hidden appearance-none;
@@ -305,11 +381,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+  transition: transform 0.5s linear; /* linear looks way cooler */
 }
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
+  transform: translateY(384px);
 }
 </style>
