@@ -59,7 +59,7 @@
 
                 <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
                     <img
-                        src="~/assets/logo.png"
+                        src="~/assets/logo.webp"
                         class="w-4/5 logo"
                     >
 
@@ -147,7 +147,7 @@ export default defineComponent({
         useHead({
             title: 'SexFM',
             link: [
-                { rel: 'preload', href: '/Jersey10.ttf', as: 'font', type: 'font/ttf', crossorigin: 'anonymous' },
+                { rel: 'preload', href: '/Jersey10.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
             ],
         });
     },

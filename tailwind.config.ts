@@ -6,7 +6,7 @@ export default {
         extend: {
             backgroundImage: () => ({
                 sexfm: `linear-gradient(0deg, rgba(80, 220, 255, 1) 0%, rgba(20, 167, 255, 1) 14%, rgba(0, 115, 233, 1) 45%, rgba(0, 151, 242, 1) 51%, rgba(122, 245, 255, 1) 67%, rgba(0, 204, 255, 1) 100%)`,
-                sex: 'url(/sexbackground.png)',
+                sex: 'url(/sexbackground.webp)',
             }),
             colors: {
                 sexfm: {
