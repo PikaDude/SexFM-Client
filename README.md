@@ -1,6 +1,6 @@
-# SexFM UNOFFICIAL Client
+# SexFM UNOFFICIAL Player
 
-This is an UNOFFICIAL SexFM Desktop Client. Find the official SexFM website at [sexfm.live](https://sexfm.live).
+This is an UNOFFICIAL SexFM Desktop Player. Find the official SexFM website at [sexfm.live](https://sexfm.live).
 
 This app borrows some styles and assets from the real website, I hope that's okay. If it isn't let me know.
 

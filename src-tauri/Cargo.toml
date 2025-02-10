@@ -1,10 +1,10 @@
 [package]
 name = "SexFM"
 version = "1.0.0"
-description = "An unofficial sexfm.live desktop client"
+description = "An unofficial sexfm.live desktop player"
 authors = ["PikaDude"]
 license = ""
-repository = "https://github.com/PikaDude/SexFM-Client"
+repository = "https://github.com/PikaDude/SexFM-Player"
 edition = "2021"
 rust-version = "1.77.2"
 

@@ -6,7 +6,7 @@
             class="bg-white p-4 rounded-lg w-[90%] leading-none"
         >
             <p class="text-xl text-center">
-                SexFM Desktop Client
+                SexFM Desktop Player
             </p>
             <p class="text-center">
                 v{{ version }}
@@ -15,7 +15,7 @@
             <p>SexFM's official website can be found at <a @click="sex">sexfm.live</a>. Find all their links there. Click on all of them.</p>
             <br>
             <p>
-                This is an <u>UNOFFICIAL</u> SexFM desktop client made by <a
+                This is an <u>UNOFFICIAL</u> SexFM desktop player made by <a
                     title="i don't really use social media anymore and don't have anything else to link"
                     @click="pikadude"
                 >PikaDude</a>.
@@ -64,7 +64,7 @@ export default defineComponent({
             this.$emit('close');
         },
         github() {
-            open('https://github.com/PikaDude/SexFM-Client');
+            open('https://github.com/PikaDude/SexFM-Player');
         },
         pikadude() {
             open('https://bsky.app/profile/pikadude.bsky.social');
