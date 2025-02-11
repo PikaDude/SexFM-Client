@@ -7,15 +7,22 @@ import { check } from '@tauri-apps/plugin-updater';
 
 export default defineComponent({
     setup() {
-        return { info: useAutoUpdateStore() };
+        return { info: useAutoUpdateStore(), app: useAppStore() };
+    },
+    data() {
+        return {
+            interval: undefined as NodeJS.Timeout | undefined,
+        };
     },
     mounted() {
-        if ('__TAURI_INTERNALS__' in window) {
+        if (!this.app.isWebFunc()) {
             this.checkForUpdates();
 
-            setInterval(this.checkForUpdates, 1000 * 60 * 10);
+            this.interval = setInterval(this.checkForUpdates, 1000 * 60 * 10);
         }
-        else console.log('Running in browser, disabling AutoUpdate');
+    },
+    beforeUnmount() {
+        clearInterval(this.interval);
     },
     methods: {
         async checkForUpdates() {

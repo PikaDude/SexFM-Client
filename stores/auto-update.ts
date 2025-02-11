@@ -7,4 +7,9 @@ export const useAutoUpdateStore = defineStore('autoUpdateStore', {
         contentLength: undefined as number | undefined,
         installFunction: undefined as (() => Promise<void>) | undefined,
     }),
+    actions: {
+        async runInstallFunction() {
+            if (this.installFunction) await this.installFunction();
+        },
+    },
 });

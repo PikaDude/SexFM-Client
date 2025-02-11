@@ -1,9 +1,10 @@
 # SexFM Player Changelog
 
 ## Dev (Unreleased)
+- Added web browser support
 - Better handle the API sending a non-existent song
-- Some minor internal improvements
 - Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
+- Various major internal improvements
 
 ## v1.1.0
 - Renamed all references of "Client" to "Player"

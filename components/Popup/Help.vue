@@ -5,17 +5,33 @@
     >
         <AutoUpdateMessage :info="autoUpdateInfo" />
         <br>
-        <p>SexFM's official website can be found at <a @click="sex">sexfm.live</a>. Find all their links there. Click on all of them.</p>
+        <p>
+            SexFM's official website can be found at <SexLink
+                link="https://sexfm.live"
+                text="sexfm.live"
+            />. Find all their links there. Click on all of them.
+        </p>
         <br>
         <p>
-            This is an <u>UNOFFICIAL</u> SexFM desktop player made by <a
+            This is an <u>UNOFFICIAL</u> SexFM desktop player made by <SexLink
                 title="i don't really use social media anymore and don't have anything else to link"
-                @click="pikadude"
-            >PikaDude</a>.
+                link="https://bsky.app/profile/pikadude.bsky.social"
+                text="PikaDude"
+            />.
         </p>
-        <p>You can find more information about this player on <a @click="github">GitHub</a>.</p>
+        <p>
+            You can find more information about this player on <SexLink
+                link="https://github.com/PikaDude/SexFM-Player"
+                text="GitHub"
+            />.
+        </p>
         <br>
-        <p>Some styles/code/assets were borrowed from the official website that was made by <a @click="dot">Dot</a>.</p>
+        <p>
+            Some styles/code/assets were borrowed from the official website that was made by <SexLink
+                link="https://dotagotchi.com/"
+                text="Dot"
+            />.
+        </p>
         <div
             class="flex flex-col items-center"
         >
@@ -31,26 +47,11 @@
 </template>
 
 <script lang="ts">
-import { open } from '@tauri-apps/plugin-shell';
 import { object } from 'vue-types';
 
 export default defineComponent({
     props: {
         autoUpdateInfo: object<AutoUpdateInfo>(),
-    },
-    methods: {
-        dot() {
-            open('https://dotagotchi.com/');
-        },
-        github() {
-            open('https://github.com/PikaDude/SexFM-Player');
-        },
-        pikadude() {
-            open('https://bsky.app/profile/pikadude.bsky.social');
-        },
-        sex() {
-            open('https://sexfm.live');
-        },
     },
 });
 </script>

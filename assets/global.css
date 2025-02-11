@@ -20,10 +20,6 @@ body {
     @apply text-sexfm-600
 }
 
-a {
-    @apply text-sexfm-300 underline cursor-pointer;
-}
-
 .sex-border {
     @apply box-border border-4 border-sexfm-400;
     border-style: ridge;

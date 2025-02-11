@@ -1,34 +1,28 @@
 <template>
     <div class="text-center">
         <p>
-            Version {{ version }}
+            Version {{ app.version }}
         </p>
-        <p v-if="!web">
+        <p v-if="!app.isWeb">
             {{ message }}
         </p>
-        <a
-            v-if="!web && (info?.status == 'error' || info?.status == 'angry')"
-            @click="manual"
-        >
-            Click for the downloads page
-        </a>
+        <SexLink
+            v-if="!app.isWeb && (info?.status == 'error' || info?.status == 'angry')"
+            link="'https://github.com/PikaDude/SexFM-Player/releases'"
+            text="Click for the downloads page"
+        />
     </div>
 </template>
 
 <script lang="ts">
-import { getVersion } from '@tauri-apps/api/app';
-import { open } from '@tauri-apps/plugin-shell';
 import { object } from 'vue-types';
 
 export default defineComponent({
     props: {
         info: object<AutoUpdateInfo>(),
     },
-    data() {
-        return {
-            version: '???',
-            web: false,
-        };
+    setup() {
+        return { app: useAppStore() };
     },
     computed: {
         message() {
@@ -45,21 +39,6 @@ export default defineComponent({
                 case 'nothing':
                     return 'No updates available.';
             }
-        },
-    },
-    async mounted() {
-        if ('__TAURI_INTERNALS__' in window) {
-            this.version = await getVersion();
-        }
-        else {
-            const runtimeConfig = useRuntimeConfig();
-            this.version = `${runtimeConfig.public.appVersion}-web`;
-            this.web = true;
-        }
-    },
-    methods: {
-        manual() {
-            open('https://github.com/PikaDude/SexFM-Player/releases');
         },
     },
 });
