@@ -10,7 +10,6 @@
         <PopupHelp
             v-if="popups.help"
             class="absolute"
-            :auto-update-info="autoUpdateInfo"
             @close="popups.help = false"
         />
     </Transition>
@@ -18,10 +17,6 @@
         <PopupSettings
             v-if="popups.settings"
             class="absolute"
-
-            :auto-update-info="autoUpdateInfo"
-            :visualizer="settings.visualizer"
-            :audio-format="settings.audioFormat"
 
             @close="popups.settings = false"
             @reload-player="reloadPlayer"
@@ -36,7 +31,6 @@ export default defineComponent({
         return {
             settings: useSettingsStore(),
             popups: usePopupsStore(),
-            autoUpdateInfo: useAutoUpdateStore(),
         };
     },
     data() {

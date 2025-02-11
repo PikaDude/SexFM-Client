@@ -3,7 +3,7 @@
         title="Settings"
         close-message="Fly."
     >
-        <AutoUpdateMessage :info="autoUpdateInfo" />
+        <AutoUpdateMessage />
         <br>
         <!-- I LOVE DISPLAY:FLEX I USE IT EVERYWHERE CAN RECOMMEND -->
         <div class="flex items-center gap-2">
@@ -43,12 +43,7 @@
 </template>
 
 <script lang="ts">
-import { object } from 'vue-types';
-
 export default defineComponent({
-    props: {
-        autoUpdateInfo: object<AutoUpdateInfo>(),
-    },
     emits: ['reloadPlayer'],
     setup() {
         return { settings: useSettingsStore() };

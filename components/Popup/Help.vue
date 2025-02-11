@@ -3,7 +3,7 @@
         title="SexFM Desktop Player"
         close-message="Awesome, I fucking love SexFM"
     >
-        <AutoUpdateMessage :info="autoUpdateInfo" />
+        <AutoUpdateMessage />
         <br>
         <p>
             SexFM's official website can be found at <SexLink
@@ -45,13 +45,3 @@
         </div>
     </PopupBase>
 </template>
-
-<script lang="ts">
-import { object } from 'vue-types';
-
-export default defineComponent({
-    props: {
-        autoUpdateInfo: object<AutoUpdateInfo>(),
-    },
-});
-</script>

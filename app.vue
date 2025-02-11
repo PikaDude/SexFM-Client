@@ -89,7 +89,6 @@ export default defineComponent({
 
         return {
             app: useAppStore(),
-            autoUpdateInfo: useAutoUpdateStore(),
             metadata: useMetadataStore(),
             popups: usePopupsStore(),
             settings: useSettingsStore(),

@@ -15,14 +15,9 @@
 </template>
 
 <script lang="ts">
-import { object } from 'vue-types';
-
 export default defineComponent({
-    props: {
-        info: object<AutoUpdateInfo>(),
-    },
     setup() {
-        return { app: useAppStore() };
+        return { app: useAppStore(), info: useAutoUpdateStore() };
     },
     computed: {
         message() {
