@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center h-screen select-none">
+    <div class="flex justify-center items-center h-auto max-h-screen aspect-[284/427] select-none hei">
         <NuxtRouteAnnouncer />
         <AutoUpdate
             ref="autoUpdater"
@@ -88,7 +88,7 @@
                         class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none"
                     />
 
-                    <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
+                    <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
                         <p
                             v-if="autoUpdateInfo?.status == 'ready'"
                             class="top-0 absolute bg-red-300 w-full text-center"
@@ -234,6 +234,7 @@ export default defineComponent({
             help: false,
 
             audioKey: new Date().toISOString(),
+            windowHeight: '384px',
         };
     },
     computed: {
@@ -266,6 +267,9 @@ export default defineComponent({
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
         this.onMetadataRefresh();
+
+        this.windowHeight = `${window.innerHeight}px`;
+        window.addEventListener('resize', () => (this.windowHeight = `${window.innerHeight}px`));
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -412,6 +416,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 .v-enter-from,
 .v-leave-to {
-  transform: translateY(384px);
+  transform: translateY(v-bind(windowHeight));
 }
 </style>

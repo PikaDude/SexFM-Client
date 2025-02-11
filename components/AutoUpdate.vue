@@ -23,9 +23,12 @@ export default defineComponent({
         };
     },
     mounted() {
-        this.checkForUpdates();
+        if ('__TAURI_INTERNALS__' in window) {
+            this.checkForUpdates();
 
-        setInterval(this.checkForUpdates, 1000 * 60 * 10);
+            setInterval(this.checkForUpdates, 1000 * 60 * 10);
+        }
+        else console.log('Running in browser, disabling AutoUpdate');
     },
     methods: {
         async checkForUpdates() {
