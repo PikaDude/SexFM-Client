@@ -12,7 +12,6 @@
             <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
                 <AllPopups
                     :metadata="metadata"
-                    @reload-player="reloadPlayer"
                 />
 
                 <!-- Player -->
@@ -20,7 +19,6 @@
                     <canvas
                         v-show="settings.visualizer"
                         ref="bars"
-                        :key="audioKey"
                         width="256"
                         height="192"
                         class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none pixelated"
@@ -72,11 +70,11 @@
 
             <audio
                 ref="player"
-                :key="audioKey"
                 hidden
                 :src="src"
                 crossorigin="anonymous"
                 preload="none"
+                @play="play"
             />
         </div>
     </div>
@@ -105,6 +103,7 @@ export default defineComponent({
         return {
             paused: true,
             loading: false,
+            secondPlay: false,
 
             metadataRefreshTimeout: null as null | NodeJS.Timeout,
             metadata: {
@@ -114,8 +113,6 @@ export default defineComponent({
                 },
                 'last-played': [],
             } as APIData,
-
-            audioKey: new Date().toISOString(),
         };
     },
     computed: {
@@ -141,9 +138,11 @@ export default defineComponent({
         await this.app.init();
         this.settings.load();
 
+        this.initializePlayer(true);
+
         requestAnimationFrame(this.onFrame);
-        this.onVolumeChange();
         this.onMetadataRefresh();
+        this.setMetadata();
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -153,33 +152,58 @@ export default defineComponent({
             const player = this.player;
             if (player) {
                 if (player.paused) {
-                    this.initializePlayer();
-                    player.play();
+                    this.play();
                 }
                 else {
-                    this.reloadPlayer();
+                    player.pause();
                 }
             }
         },
         toggleMute() {
             if (this.player) this.player.muted = this.settings.muted;
         },
-        initializePlayer() {
+        initializePlayer(firstRun: boolean) {
             const player = this.player;
             if (!player) return;
             player.volume = this.settings.volume;
             player.muted = this.settings.muted;
 
-            // every time the user pauses the radio and restarts it, we initialize a new AVBars
-            // why? well, in the scenario we don't do this, if the user pauses the radio and restarts it, and we reload the audio source to force a reconnect (instead of the entire audio/canvas element), the audio *doubles* in volume because of AVBars
-            // there's no good way to unload or refresh AVBars since it's not at all flexible
-            // this somehow doesn't appear to cause a noticeable memory leak on chromium so that's neat i guess
-            // i should probably open up a github issue on vue-audio-visual for this but i'm lazy
-            useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+            if (firstRun) useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
         },
-        reloadPlayer() {
-            this.player?.pause();
-            this.audioKey = new Date().toISOString();
+        setMetadata() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: this.metadata['current-track'].title,
+                    artist: this.metadata['current-track'].artist,
+                    artwork: [
+                        {
+                            src: '/128x128.png',
+                            sizes: '128x128',
+                            type: 'image/png',
+                        },
+                        {
+                            src: '/256x256.png',
+                            sizes: '256x256',
+                            type: 'image/png',
+                        },
+                    ],
+                });
+            }
+        },
+        play() {
+            // do NOT call player.play() directly!
+            // this exists to catch if the user uses OS media controls to play the player
+            // we wanna interrupt that and reload the stream before playing
+            // we need to do this on play rather than pause, because if we reload on pause, then the OS media controls will disappear
+            if (this.secondPlay) {
+                this.secondPlay = false;
+                return;
+            }
+
+            this.secondPlay = true;
+            this.player?.load();
+            this.initializePlayer(false);
+            this.player?.play();
         },
 
         onFrame() {
@@ -212,25 +236,7 @@ export default defineComponent({
                 clearTimeout(this.metadataRefreshTimeout);
             }
             this.metadataRefreshTimeout = setTimeout(this.onMetadataRefresh, 5000);
-
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: this.metadata['current-track'].title,
-                    artist: this.metadata['current-track'].artist,
-                    artwork: [
-                        {
-                            src: '/128x128.png',
-                            sizes: '128x128',
-                            type: 'image/png',
-                        },
-                        {
-                            src: '/256x256.png',
-                            sizes: '256x256',
-                            type: 'image/png',
-                        },
-                    ],
-                });
-            }
+            this.setMetadata();
         },
     },
 });

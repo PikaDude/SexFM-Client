@@ -3,6 +3,7 @@
 ## Dev (Unreleased)
 - Added web browser support
 - Better handle the API sending a non-existent song
+- Improved stream reloading in terms of performance and edge-cases
 - Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
 - Made the mute button grey
 - Various major internal improvements
