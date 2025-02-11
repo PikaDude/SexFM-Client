@@ -2,6 +2,7 @@
     <div class="flex justify-center items-center gap-1">
         <div
             class="flex justify-center items-center border button"
+            :class="{ grayscale: settings.muted }"
             @click="toggleMute"
         >
             <Icon
