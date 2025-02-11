@@ -15,20 +15,22 @@
                 @change="onVisualizerChange"
             >
         </div>
-        <label for="audio-format">Audio Format:</label>
-        <select
-            ref="audioFormat"
-            name="audio-format"
-            :value="audioFormat"
-            @change="onAudioFormatChange"
-        >
-            <option value="MP3">
-                MP3 (less bandwidth)
-            </option>
-            <option value="AAC">
-                AAC (better quality)
-            </option>
-        </select>
+        <div class="flex flex-wrap items-center gap-2">
+            <label for="audio-format">Audio Format:</label>
+            <select
+                ref="audioFormat"
+                name="audio-format"
+                :value="audioFormat"
+                @change="onAudioFormatChange"
+            >
+                <option value="MP3">
+                    MP3 (less bandwidth)
+                </option>
+                <option value="AAC">
+                    AAC (better quality)
+                </option>
+            </select>
+        </div>
         <br>
         <br>
         <div class="flex justify-center">
