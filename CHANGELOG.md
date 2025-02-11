@@ -1,5 +1,8 @@
 # SexFM Player Changelog
 
+## Dev (Unreleased)
+- Better handle the API sending a non-existent song
+
 ## v1.1.0
 - Renamed all references of "Client" to "Player"
 - Made buttons look more Sex... FM

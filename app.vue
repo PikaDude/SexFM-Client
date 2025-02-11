@@ -353,7 +353,7 @@ export default defineComponent({
             const response = await fetch('https://api.live365.com/station/a25222');
             const newData = await response.json() as APIData;
             // what's the worst that could happen if we get unexpected data
-            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title) this.metadata = newData;
+            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title && this.metadata['current-track']?.title != null) this.metadata = newData;
 
             if (this.metadataRefreshTimeout) {
                 clearTimeout(this.metadataRefreshTimeout);
