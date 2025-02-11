@@ -1,10 +1,7 @@
 <template>
     <div class="flex justify-center items-center h-screen select-none">
         <NuxtRouteAnnouncer />
-        <AutoUpdate
-            ref="autoUpdater"
-            @announce="onAutoUpdateAnnounce"
-        />
+        <AutoUpdate />
 
         <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
             <div
@@ -18,7 +15,7 @@
                     >SexFM</span>
                     <div
                         class="border button"
-                        @click="settings = !settings"
+                        @click="popups.settings = !popups.settings"
                     >
                         <Icon name="material-symbols:tools-wrench-outline-sharp" />
                     </div>
@@ -27,7 +24,7 @@
                 <div class="flex items-center gap-1">
                     <div
                         class="border button"
-                        @click="help = !help"
+                        @click="popups.help = !popups.help"
                     >
                         <Icon name="material-symbols:question-mark" />
                     </div>
@@ -49,38 +46,37 @@
             <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
                 <Transition>
                     <PopupLastPlayed
-                        v-if="lastPlayed"
+                        v-if="popups.lastPlayed"
                         :songs="metadata['last-played']"
                         class="absolute"
-                        @close="lastPlayed = false"
+                        @close="popups.lastPlayed = false"
                     />
                 </Transition>
                 <Transition>
                     <PopupHelp
-                        v-if="help"
+                        v-if="popups.help"
                         class="absolute"
                         :auto-update-info="autoUpdateInfo"
-                        @close="help = false"
+                        @close="popups.help = false"
                     />
                 </Transition>
                 <Transition>
                     <PopupSettings
-                        v-if="settings"
+                        v-if="popups.settings"
                         class="absolute"
 
                         :auto-update-info="autoUpdateInfo"
-                        :visualizer="visualizer"
-                        :audio-format="audioFormat"
+                        :visualizer="settings.visualizer"
+                        :audio-format="settings.audioFormat"
 
-                        @close="settings = false"
-                        @visualizer-changed="onVisualizerChanged"
-                        @audio-format-changed="onAudioFormatChanged"
+                        @close="popups.settings = false"
+                        @reload-player="reloadPlayer"
                     />
                 </Transition>
 
                 <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 h-full">
                     <canvas
-                        v-show="visualizer"
+                        v-show="settings.visualizer"
                         ref="bars"
                         :key="audioKey"
                         width="256"
@@ -141,35 +137,35 @@
                                 @click="toggleMute"
                             >
                                 <Icon
-                                    v-show="volume > 0.5 && !muted"
+                                    v-show="settings.volume > 0.5 && !settings.muted"
                                     name="material-symbols:volume-up"
                                 />
                                 <Icon
-                                    v-show="volume <= 0.5 && volume != 0 && !muted"
+                                    v-show="settings.volume <= 0.5 && settings.volume != 0 && !settings.muted"
                                     name="material-symbols:volume-down"
                                 />
                                 <Icon
-                                    v-show="volume == 0 || muted"
+                                    v-show="settings.volume == 0 || settings.muted"
                                     name="material-symbols:volume-off"
                                 />
                             </div>
                             <div class="relative">
-                                <span class="left-1 absolute">{{ Math.floor(volume * 100) }}%</span>
+                                <span class="left-1 absolute">{{ settings.volumePercentage }}</span>
                                 <input
-                                    v-model="volume"
+                                    v-model="settings.volume"
                                     type="range"
                                     max="1"
                                     min="0"
                                     step="0.01"
                                     @input="onVolumeChange"
-                                    @change="onVolumeSet"
+                                    @change="settings.setVolume"
                                 >
                             </div>
                         </div>
 
                         <div
                             class="flex justify-center items-center gap-2 px-[10px!important] border button"
-                            @click="lastPlayed = true"
+                            @click="popups.lastPlayed = true"
                         >
                             <Icon
                                 name="material-symbols:menu"
@@ -198,7 +194,6 @@
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open } from '@tauri-apps/plugin-shell';
 import { useAVBars } from 'vue-audio-visual';
-import type AutoUpdate from '~/components/AutoUpdate.vue';
 
 export default defineComponent({
     setup() {
@@ -208,16 +203,17 @@ export default defineComponent({
                 { rel: 'preload', href: '/Jersey10.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
             ],
         });
+
+        return {
+            settings: useSettingsStore(),
+            popups: usePopupsStore(),
+            autoUpdateInfo: useAutoUpdateStore(),
+        };
     },
     data() {
         return {
             paused: true,
             loading: false,
-
-            volume: 0.5,
-            muted: false,
-            visualizer: true,
-            audioFormat: 'MP3' as AudioFormat,
 
             metadataRefreshTimeout: null as null | NodeJS.Timeout,
             metadata: {
@@ -227,27 +223,19 @@ export default defineComponent({
                 },
                 'last-played': [],
             } as APIData,
-            autoUpdateInfo: undefined as AutoUpdateInfo | undefined,
-
-            settings: false,
-            lastPlayed: false,
-            help: false,
 
             audioKey: new Date().toISOString(),
         };
     },
     computed: {
         src() {
-            switch (this.audioFormat) {
+            switch (this.settings.audioFormat) {
                 case 'AAC':
                     return 'https://streaming.live365.com/a25222_2';
                 default:
                 case 'MP3':
                     return 'https://streaming.live365.com/a25222';
             }
-        },
-        autoUpdater() {
-            return this.$refs.autoUpdater as typeof AutoUpdate | undefined;
         },
         bars() {
             return this.$refs.bars as HTMLCanvasElement | undefined;
@@ -259,9 +247,7 @@ export default defineComponent({
     mounted() {
         document.addEventListener('contextmenu', e => e.preventDefault());
 
-        this.volume = Number(localStorage.getItem('volume') || '0.5');
-        this.visualizer = localStorage.getItem('visualizer') != 'false';
-        this.audioFormat = (localStorage.getItem('audioFormat') || 'MP3') as AudioFormat;
+        this.settings.load();
 
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
@@ -279,7 +265,7 @@ export default defineComponent({
             getCurrentWindow().minimize();
         },
         async update() {
-            if (this.autoUpdater && this.autoUpdater.install) await this.autoUpdater.install();
+            if (this.autoUpdateInfo.installFunction) await this.autoUpdateInfo.installFunction();
         },
         patreon() {
             open('https://patreon.com/SexFMLive');
@@ -289,28 +275,35 @@ export default defineComponent({
             const player = this.player;
             if (player) {
                 if (player.paused) {
-                    player.volume = this.volume;
+                    this.initializePlayer();
                     player.play();
-                    this.initializeVisualizer();
                 }
                 else {
-                    player.pause();
-                    this.audioKey = new Date().toISOString();
+                    this.reloadPlayer();
                 }
             }
         },
         toggleMute() {
-            const muted = this.muted;
-            this.muted = !muted;
+            const muted = this.settings.muted;
+            this.settings.muted = !muted;
             if (this.player) this.player.muted = !muted;
         },
-        initializeVisualizer() {
+        initializePlayer() {
+            const player = this.player;
+            if (!player) return;
+            player.volume = this.settings.volume;
+            player.muted = this.settings.muted;
+
             // every time the user pauses the radio and restarts it, we initialize a new AVBars
             // why? well, in the scenario we don't do this, if the user pauses the radio and restarts it, and we reload the audio source to force a reconnect (instead of the entire audio/canvas element), the audio *doubles* in volume because of AVBars
             // there's no good way to unload or refresh AVBars since it's not at all flexible
             // this somehow doesn't appear to cause a noticeable memory leak on chromium so that's neat i guess
             // i should probably open up a github issue on vue-audio-visual for this but i'm lazy
-            useAVBars(this.player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+            useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+        },
+        reloadPlayer() {
+            this.player?.pause();
+            this.audioKey = new Date().toISOString();
         },
 
         onFrame() {
@@ -327,26 +320,10 @@ export default defineComponent({
         },
         onVolumeChange() {
             if (this.player) {
-                this.player.volume = this.volume;
+                this.player.volume = this.settings.volume;
                 this.player.muted = false;
-                this.muted = false;
+                this.settings.muted = false;
             }
-        },
-        onVolumeSet() {
-            localStorage.setItem('volume', this.volume.toString());
-        },
-        onVisualizerChanged(value: boolean) {
-            this.visualizer = value;
-            localStorage.setItem('visualizer', value.toString());
-        },
-        onAudioFormatChanged(value: AudioFormat) {
-            this.player?.pause();
-            this.audioKey = new Date().toISOString();
-            this.audioFormat = value;
-            localStorage.setItem('audioFormat', value.toString());
-        },
-        onAutoUpdateAnnounce(value: AutoUpdateInfo) {
-            this.autoUpdateInfo = value;
         },
         async onMetadataRefresh() {
             this.metadataRefreshTimeout = null;

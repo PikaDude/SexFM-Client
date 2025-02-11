@@ -6,21 +6,8 @@
 import { check } from '@tauri-apps/plugin-updater';
 
 export default defineComponent({
-    emits: {
-        announce(info: AutoUpdateInfo) {
-            return info == info; // awesome validation
-        },
-    },
-    data() {
-        return {
-            info: {
-                status: 'nothing' as const,
-                downloaded: 0,
-                contentLength: undefined,
-                message: 'No updates available',
-            } as AutoUpdateInfo,
-            install: undefined as (() => Promise<void>) | undefined,
-        };
+    setup() {
+        return { info: useAutoUpdateStore() };
     },
     mounted() {
         this.checkForUpdates();
@@ -34,7 +21,6 @@ export default defineComponent({
             const update = await check().catch((e) => {
                 console.error(e);
                 this.info.status = 'error';
-                this.announce();
             }) || null;
             if (!update) {
                 localStorage.removeItem('updateReady');
@@ -44,13 +30,10 @@ export default defineComponent({
             console.log(
                 `found update ${update.version} from ${update.date} with notes ${update.body}`,
             );
-            this.announce();
 
             this.info.downloaded = 0;
             this.info.contentLength = 0;
             await update.download((event) => {
-                this.announce();
-
                 switch (event.event) {
                     case 'Started':
                         this.info.status = 'downloading';
@@ -70,17 +53,13 @@ export default defineComponent({
             });
 
             console.log('update ready to install');
-            this.install = async () => {
+            this.info.installFunction = async () => {
                 await update.install();
             };
             this.info.status = 'ready';
-            this.announce();
 
             if (localStorage.getItem('updateReady') == 'true') this.info.status = 'angry';
             else localStorage.setItem('updateReady', 'true');
-        },
-        announce() {
-            this.$emit('announce', this.info);
         },
     },
 });

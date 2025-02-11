@@ -2,6 +2,8 @@
 
 ## Dev (Unreleased)
 - Better handle the API sending a non-existent song
+- Some minor internal improvements
+- Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
 
 ## v1.1.0
 - Renamed all references of "Client" to "Player"

@@ -10,16 +10,16 @@
             <label for="visualizer">Music Visualizer:</label>
             <input
                 name="visualizer"
-                :checked="visualizer"
+                :checked="settings.visualizer"
                 type="checkbox"
-                @change="onVisualizerChange"
+                @change="settings.toggleVisualizer"
             >
         </div>
         <label for="audio-format">Audio Format:</label>
         <select
             ref="audioFormat"
             name="audio-format"
-            :value="audioFormat"
+            :value="settings.audioFormat"
             @change="onAudioFormatChange"
         >
             <option value="MP3">
@@ -41,25 +41,21 @@
 </template>
 
 <script lang="ts">
-import { bool, object, string } from 'vue-types';
+import { object } from 'vue-types';
 
 export default defineComponent({
     props: {
         autoUpdateInfo: object<AutoUpdateInfo>(),
-        visualizer: bool().isRequired,
-        audioFormat: string<AudioFormat>().isRequired,
     },
-    emits: ['visualizerChanged', 'audioFormatChanged'],
+    emits: ['reloadPlayer'],
+    setup() {
+        return { settings: useSettingsStore() };
+    },
     methods: {
-        getAudioFormatEl() {
-            return this.$refs.audioFormat as HTMLSelectElement;
-        },
-
-        onVisualizerChange() {
-            this.$emit('visualizerChanged', !this.visualizer);
-        },
-        onAudioFormatChange() {
-            this.$emit('audioFormatChanged', this.getAudioFormatEl().value);
+        onAudioFormatChange(event: Event) {
+            const value = (event.target as HTMLSelectElement).value as AudioFormat;
+            this.settings.setAudioFormat(value);
+            this.$emit('reloadPlayer');
         },
     },
 });
