@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center h-screen select-none">
+    <div class="flex justify-center items-center h-auto max-h-screen aspect-[284/427] select-none hei">
         <NuxtRouteAnnouncer />
         <AutoUpdate />
 
@@ -74,17 +74,17 @@
                     />
                 </Transition>
 
-                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 h-full">
+                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
                     <canvas
                         v-show="settings.visualizer"
                         ref="bars"
                         :key="audioKey"
                         width="256"
                         height="192"
-                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none"
+                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none pixelated"
                     />
 
-                    <div class="z-10 flex flex-col justify-center items-center gap-2 h-full">
+                    <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
                         <p
                             v-if="autoUpdateInfo?.status == 'ready'"
                             class="top-0 absolute bg-red-300 w-full text-center"
@@ -175,7 +175,15 @@
                     </div>
                 </div>
 
-                <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
+                <a
+                    class="w-full"
+                    @click="patreon"
+                >
+                    <img
+                        class="w-full pixelated"
+                        src="~/assets/player_banner.jpg"
+                    >
+                </a>
             </div>
 
             <audio
@@ -225,6 +233,7 @@ export default defineComponent({
             } as APIData,
 
             audioKey: new Date().toISOString(),
+            windowHeight: '384px',
         };
     },
     computed: {
@@ -252,6 +261,9 @@ export default defineComponent({
         requestAnimationFrame(this.onFrame);
         this.onVolumeChange();
         this.onMetadataRefresh();
+
+        this.windowHeight = `${window.innerHeight}px`;
+        window.addEventListener('resize', () => (this.windowHeight = `${window.innerHeight}px`));
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -389,6 +401,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 .v-enter-from,
 .v-leave-to {
-  transform: translateY(384px);
+  transform: translateY(v-bind(windowHeight));
 }
 </style>

@@ -1,4 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config';
+import pkg from './package.json';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -10,6 +11,12 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
 
     css: ['~/assets/global.css'],
+
+    runtimeConfig: {
+        public: {
+            appVersion: pkg.version,
+        },
+    },
 
     // Enables the development server to be discoverable by other devices when running on iOS physical devices
     devServer: { host: process.env.TAURI_DEV_HOST || 'localhost' },

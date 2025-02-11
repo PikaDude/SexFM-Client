@@ -3,9 +3,11 @@
         <p>
             Version {{ version }}
         </p>
-        <p>{{ message }}</p>
+        <p v-if="!web">
+            {{ message }}
+        </p>
         <a
-            v-if="info?.status == 'error' || info?.status == 'angry'"
+            v-if="!web && (info?.status == 'error' || info?.status == 'angry')"
             @click="manual"
         >
             Click for the downloads page
@@ -25,6 +27,7 @@ export default defineComponent({
     data() {
         return {
             version: '???',
+            web: false,
         };
     },
     computed: {
@@ -45,7 +48,14 @@ export default defineComponent({
         },
     },
     async mounted() {
-        this.version = await getVersion();
+        if ('__TAURI_INTERNALS__' in window) {
+            this.version = await getVersion();
+        }
+        else {
+            const runtimeConfig = useRuntimeConfig();
+            this.version = `${runtimeConfig.public.appVersion}-web`;
+            this.web = true;
+        }
     },
     methods: {
         manual() {
