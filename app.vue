@@ -78,14 +78,14 @@
                     />
                 </Transition>
 
-                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 h-full">
+                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
                     <canvas
                         v-show="visualizer"
                         ref="bars"
                         :key="audioKey"
                         width="256"
                         height="192"
-                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none"
+                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none pixelated"
                     />
 
                     <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
@@ -179,7 +179,15 @@
                     </div>
                 </div>
 
-                <a @click="patreon"><img src="~/assets/player_banner.jpg"></a>
+                <a
+                    class="w-full"
+                    @click="patreon"
+                >
+                    <img
+                        class="w-full pixelated"
+                        src="~/assets/player_banner.jpg"
+                    >
+                </a>
             </div>
 
             <audio
