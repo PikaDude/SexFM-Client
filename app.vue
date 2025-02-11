@@ -10,9 +10,7 @@
 
             <!-- Main Content -->
             <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
-                <AllPopups
-                    :metadata="metadata"
-                />
+                <AllPopups />
 
                 <!-- Player -->
                 <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
@@ -29,10 +27,7 @@
 
                         <Logo class="pb-1 w-4/5" />
 
-                        <div class="flex flex-col gap-1 text-center">
-                            <span class="text-lg leading-none select-text">{{ metadata['current-track'].title }}</span>
-                            <span class="leading-none select-text">{{ metadata['current-track'].artist }}</span>
-                        </div>
+                        <NowPlaying />
 
                         <PlayButton
                             :paused="paused"
@@ -72,7 +67,7 @@
                 ref="player"
                 hidden
                 :src="src"
-                crossorigin="anonymous"
+                crossorigin="use-credentials"
                 preload="none"
                 @play="play"
             />
@@ -94,9 +89,10 @@ export default defineComponent({
 
         return {
             app: useAppStore(),
-            settings: useSettingsStore(),
-            popups: usePopupsStore(),
             autoUpdateInfo: useAutoUpdateStore(),
+            metadata: useMetadataStore(),
+            popups: usePopupsStore(),
+            settings: useSettingsStore(),
         };
     },
     data() {
@@ -104,15 +100,6 @@ export default defineComponent({
             paused: true,
             loading: false,
             secondPlay: false,
-
-            metadataRefreshTimeout: null as null | NodeJS.Timeout,
-            metadata: {
-                'current-track': {
-                    title: 'Unknown Song',
-                    artist: 'Unknown Artist',
-                },
-                'last-played': [],
-            } as APIData,
         };
     },
     computed: {
@@ -140,9 +127,10 @@ export default defineComponent({
 
         this.initializePlayer(true);
 
+        this.metadata.fetch();
+        this.metadata.setMediaSession();
+
         requestAnimationFrame(this.onFrame);
-        this.onMetadataRefresh();
-        this.setMetadata();
     },
     beforeUnmount() {
         // TODO lol simply never unload the page (this should never happen at the moment)
@@ -170,26 +158,6 @@ export default defineComponent({
 
             if (firstRun) useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
         },
-        setMetadata() {
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: this.metadata['current-track'].title,
-                    artist: this.metadata['current-track'].artist,
-                    artwork: [
-                        {
-                            src: '/128x128.png',
-                            sizes: '128x128',
-                            type: 'image/png',
-                        },
-                        {
-                            src: '/256x256.png',
-                            sizes: '256x256',
-                            type: 'image/png',
-                        },
-                    ],
-                });
-            }
-        },
         play() {
             // do NOT call player.play() directly!
             // this exists to catch if the user uses OS media controls to play the player
@@ -214,9 +182,9 @@ export default defineComponent({
                 this.loading = player.readyState < 3;
             }
 
-            requestAnimationFrame(this.onFrame);
+            this.metadata.checkRefreshTimeout();
 
-            if (this.metadataRefreshTimeout == null) this.metadataRefreshTimeout = setTimeout(this.onMetadataRefresh, 5000);
+            requestAnimationFrame(this.onFrame);
         },
         onVolumeChange() {
             if (this.player) {
@@ -224,19 +192,6 @@ export default defineComponent({
                 this.player.muted = false;
                 this.settings.muted = false;
             }
-        },
-        async onMetadataRefresh() {
-            this.metadataRefreshTimeout = null;
-            const response = await fetch('https://api.live365.com/station/a25222');
-            const newData = await response.json() as APIData;
-            // what's the worst that could happen if we get unexpected data
-            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title && newData['current-track']?.title != null) this.metadata = newData;
-
-            if (this.metadataRefreshTimeout) {
-                clearTimeout(this.metadataRefreshTimeout);
-            }
-            this.metadataRefreshTimeout = setTimeout(this.onMetadataRefresh, 5000);
-            this.setMetadata();
         },
     },
 });

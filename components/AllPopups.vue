@@ -2,7 +2,6 @@
     <Transition>
         <PopupLastPlayed
             v-if="popups.lastPlayed"
-            :songs="metadata['last-played']"
             class="absolute"
             @close="popups.lastPlayed = false"
         />
@@ -31,12 +30,7 @@
 </template>
 
 <script lang="ts">
-import { object } from 'vue-types';
-
 export default defineComponent({
-    props: {
-        metadata: object<APIData>().isRequired,
-    },
     emits: ['reloadPlayer'],
     setup() {
         return {
