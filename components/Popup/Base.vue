@@ -1,6 +1,6 @@
 <template>
     <div
-        class="z-20 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-md w-full h-full"
+        class="z-20 flex justify-center items-center bg-black bg-opacity-50 w-full h-full"
     >
         <div
             class="flex flex-col justify-between gap-4 bg-white p-4 sex-border rounded-lg w-[90%] h-full max-h-[90%]"

@@ -53,7 +53,7 @@ export default defineComponent({
 
 <style scoped>
 input[type="range"] {
-    @apply bg-gray-300 overflow-hidden appearance-none;
+    @apply bg-gray-300 h-8 overflow-hidden appearance-none;
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
@@ -63,6 +63,11 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-webkit-slider-thumb {
+    @apply bg-sexfm-500 w-2 h-8 appearance-none cursor-pointer;
+    box-shadow: -100px 0 0 100px #02C5F7;
+}
+
+input[type="range"]::-moz-range-thumb {
     @apply bg-sexfm-500 w-2 h-8 appearance-none cursor-pointer;
     box-shadow: -100px 0 0 100px #02C5F7;
 }

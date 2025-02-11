@@ -13,7 +13,7 @@
         </p>
         <br>
         <p>
-            This is an <u>UNOFFICIAL</u> SexFM desktop player made by <SexLink
+            This is an Unofficial SexFM desktop player made by <SexLink
                 title="i don't really use social media anymore and don't have anything else to link"
                 link="https://bsky.app/profile/pikadude.bsky.social"
                 text="PikaDude"
