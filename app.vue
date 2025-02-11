@@ -100,6 +100,9 @@ export default defineComponent({
             paused: true,
             loading: false,
             secondPlay: false,
+
+            abortAnimationFrame: false,
+            visualiserInitialized: false,
         };
     },
     computed: {
@@ -125,15 +128,16 @@ export default defineComponent({
         await this.app.init();
         this.settings.load();
 
-        this.initializePlayer(true);
+        this.initializePlayer();
 
         this.metadata.fetch();
         this.metadata.setMediaSession();
 
+        this.abortAnimationFrame = false;
         requestAnimationFrame(this.onFrame);
     },
     beforeUnmount() {
-        // TODO lol simply never unload the page (this should never happen at the moment)
+        this.abortAnimationFrame = true;
     },
     methods: {
         playpause() {
@@ -150,13 +154,16 @@ export default defineComponent({
         toggleMute() {
             if (this.player) this.player.muted = this.settings.muted;
         },
-        initializePlayer(firstRun: boolean) {
+        initializePlayer() {
             const player = this.player;
             if (!player) return;
             player.volume = this.settings.volume;
             player.muted = this.settings.muted;
 
-            if (firstRun) useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+            if (!this.visualiserInitialized) {
+                this.visualiserInitialized = true;
+                useAVBars(player, this.bars, { src: this.src, canvHeight: 192, canvWidth: 256, barColor: ['#00CCFF', '#00CCFF', '#0066FF'] });
+            }
         },
         play() {
             // do NOT call player.play() directly!
@@ -170,19 +177,19 @@ export default defineComponent({
 
             this.secondPlay = true;
             this.player?.load();
-            this.initializePlayer(false);
+            this.initializePlayer();
             this.player?.play();
         },
 
         onFrame() {
+            if (this.abortAnimationFrame) return;
+
             // the best way to catch it if the user pauses the player using media controls or if the stream cuts out
             const player = this.player;
             if (player) {
                 this.paused = player.paused;
                 this.loading = player.readyState < 3;
             }
-
-            this.metadata.checkRefreshTimeout();
 
             requestAnimationFrame(this.onFrame);
         },

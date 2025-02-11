@@ -9,21 +9,40 @@ export const useMetadataStore = defineStore('metadataStore', {
             },
             'last-played': [],
         } as APIData,
-        refreshTimeout: null as null | NodeJS.Timeout,
+        refreshTimeout: undefined as undefined | NodeJS.Timeout,
     }),
     actions: {
         async fetch() {
-            this.refreshTimeout = null;
-            const response = await fetch('https://api.live365.com/station/a25222');
-            const newData = await response.json() as APIData;
-            // what's the worst that could happen if we get unexpected data
-            if (this.metadata['last-played'][0]?.title != newData['current-track']?.title && newData['current-track']?.title != null) this.metadata = newData;
+            clearTimeout(this.refreshTimeout);
+            this.refreshTimeout = undefined;
 
-            if (this.refreshTimeout) {
-                clearTimeout(this.refreshTimeout);
+            // insane amounts of error handling just in case. this api loves being weird
+            try {
+                const response = await fetch('https://api.live365.com/station/a25222').catch(this.queueRefresh);
+                if (!response) {
+                    this.queueRefresh('empty response');
+                    return;
+                }
+                const newData = await response.json().catch(this.queueRefresh) as (APIData | undefined);
+                if (!newData) {
+                    this.queueRefresh('empty json');
+                    return;
+                }
+
+                // what's the worst that could happen if we get unexpected data
+                if (this.metadata['last-played'][0]?.title != newData['current-track']?.title && newData['current-track']?.title != null) this.metadata = newData;
             }
-            this.refreshTimeout = setTimeout(this.fetch, 5000);
+            catch (e) {
+                this.queueRefresh(e);
+                return;
+            }
+
+            this.queueRefresh();
             this.setMediaSession();
+        },
+        queueRefresh(error?: Error | unknown) {
+            if (error) console.error(error);
+            if (this.refreshTimeout == undefined) this.refreshTimeout = setTimeout(this.fetch, 5000);
         },
         setMediaSession() {
             if ('mediaSession' in navigator) {
@@ -44,9 +63,6 @@ export const useMetadataStore = defineStore('metadataStore', {
                     ],
                 });
             }
-        },
-        checkRefreshTimeout() {
-            if (this.refreshTimeout == null) this.refreshTimeout = setTimeout(this.fetch, 5000);
         },
     },
 });
