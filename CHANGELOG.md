@@ -6,6 +6,7 @@
 - Improved stream reloading in terms of performance and edge-cases
 - Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
 - Made the mute button grey
+- Enabled compilation optimizations to make the binary smaller
 - Various major internal improvements
 
 ## v1.1.0
