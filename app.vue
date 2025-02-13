@@ -1,68 +1,70 @@
 <template>
-    <!-- Shadow -->
-    <div class="flex justify-center items-center h-auto max-h-screen aspect-[284/427] select-none hei">
-        <NuxtRouteAnnouncer />
-        <AutoUpdate />
+    <div class="flex items-center justify-center h-screen">
+        <!-- Shadow -->
+        <div class="flex justify-center items-center h-auto max-h-screen aspect-[284/427] select-none">
+            <NuxtRouteAnnouncer />
+            <AutoUpdate />
 
-        <!-- Window -->
-        <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
-            <Titlebar />
+            <!-- Window -->
+            <div class="flex flex-col drop-shadow-sex sex-border rounded-xl w-[90%] h-[90%] overflow-hidden">
+                <Titlebar />
 
-            <!-- Main Content -->
-            <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
-                <AllPopups />
+                <!-- Main Content -->
+                <div class="relative flex flex-col justify-center items-center bg-sex bg-cover h-full">
+                    <AllPopups />
 
-                <!-- Player -->
-                <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
-                    <canvas
-                        v-show="settings.visualizer"
-                        ref="bars"
-                        width="256"
-                        height="192"
-                        class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none pixelated"
-                    />
-
-                    <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
-                        <Banner />
-
-                        <Logo class="pb-1 w-4/5" />
-
-                        <NowPlaying />
-
-                        <PlayButton
-                            :paused="paused"
-                            :loading="loading"
-                            @click="playpause"
+                    <!-- Player -->
+                    <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
+                        <canvas
+                            v-show="settings.visualizer"
+                            ref="bars"
+                            width="256"
+                            height="192"
+                            class="bottom-0 absolute flex flex-col opacity-20 w-full pointer-events-none pixelated"
                         />
 
-                        <VolumeControl
-                            @toggle-mute="toggleMute"
-                            @volume-change="onVolumeChange"
-                        />
+                        <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
+                            <Banner />
 
-                        <LastPlayedButton />
+                            <Logo class="pb-1 w-4/5" />
+
+                            <NowPlaying />
+
+                            <PlayButton
+                                :paused="paused"
+                                :loading="loading"
+                                @click="playpause"
+                            />
+
+                            <VolumeControl
+                                @toggle-mute="toggleMute"
+                                @volume-change="onVolumeChange"
+                            />
+
+                            <LastPlayedButton />
+                        </div>
                     </div>
+
+                    <SexLink
+                        class="w-full"
+                        link="https://patreon.com/SexFMLive"
+                    >
+                        <img
+                            class="w-full pixelated"
+                            src="~/assets/player_banner.jpg"
+                        >
+                    </SexLink>
                 </div>
 
-                <SexLink
-                    class="w-full"
-                    link="https://patreon.com/SexFMLive"
-                >
-                    <img
-                        class="w-full pixelated"
-                        src="~/assets/player_banner.jpg"
-                    >
-                </SexLink>
+                <audio
+                    ref="player"
+                    hidden
+                    :src="src"
+                    crossorigin="use-credentials"
+                    preload="none"
+                    @play="play"
+                />
             </div>
-
-            <audio
-                ref="player"
-                hidden
-                :src="src"
-                crossorigin="use-credentials"
-                preload="none"
-                @play="play"
-            />
         </div>
     </div>
 </template>

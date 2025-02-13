@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col gap-1 text-center">
-        <span class="text-lg leading-none select-text">{{ metadata.metadata['current-track'].title }}</span>
-        <span class="leading-none select-text">{{ metadata.metadata['current-track'].artist }}</span>
+        <span class="text-lg xs:text-3xl leading-none select-text">{{ metadata.metadata['current-track'].title }}</span>
+        <span class="text-2xl leading-none select-text">{{ metadata.metadata['current-track'].artist }}</span>
     </div>
 </template>
 

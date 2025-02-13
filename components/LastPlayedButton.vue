@@ -3,10 +3,10 @@
         class="flex justify-center items-center gap-2 px-[10px!important] border button"
         @click="popups.lastPlayed = true"
     >
-        <Icon
+        <SexIcon
             name="material-symbols:menu"
         />
-        <span>Last Played</span>
+        <span class="xs:text-2xl">Last Played</span>
     </div>
 </template>
 

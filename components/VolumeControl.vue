@@ -5,21 +5,21 @@
             :class="{ grayscale: settings.muted }"
             @click="toggleMute"
         >
-            <Icon
+            <SexIcon
                 v-show="settings.volume > 0.5 && !settings.muted"
                 name="material-symbols:volume-up"
             />
-            <Icon
+            <SexIcon
                 v-show="settings.volume <= 0.5 && settings.volume != 0 && !settings.muted"
                 name="material-symbols:volume-down"
             />
-            <Icon
+            <SexIcon
                 v-show="settings.volume == 0 || settings.muted"
                 name="material-symbols:volume-off"
             />
         </div>
         <div class="relative">
-            <span class="left-1 absolute">{{ settings.volumePercentage }}</span>
+            <span class="left-1 absolute xs:text-xl">{{ settings.volumePercentage }}</span>
             <input
                 v-model="settings.volume"
                 type="range"
@@ -27,7 +27,6 @@
                 min="0"
                 step="0.01"
                 @input="onVolumeChange"
-                @change="settings.setVolume"
             >
         </div>
     </div>
@@ -53,7 +52,7 @@ export default defineComponent({
 
 <style scoped>
 input[type="range"] {
-    @apply bg-gray-300 h-8 overflow-hidden appearance-none;
+    @apply bg-gray-300 h-8 xs:h-10 w-32 xs:w-40 overflow-hidden appearance-none;
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
@@ -63,12 +62,12 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-webkit-slider-thumb {
-    @apply bg-sexfm-500 w-2 h-8 appearance-none cursor-pointer;
+    @apply bg-sexfm-500 w-2 xs:w-3 h-8 xs:h-10 appearance-none cursor-pointer;
     box-shadow: -100px 0 0 100px #02C5F7;
 }
 
 input[type="range"]::-moz-range-thumb {
-    @apply bg-sexfm-500 w-2 h-8 appearance-none cursor-pointer;
+    @apply bg-sexfm-500 w-2 xs:w-3 h-8 xs:h-10 appearance-none cursor-pointer;
     box-shadow: -100px 0 0 100px #02C5F7;
 }
 </style>

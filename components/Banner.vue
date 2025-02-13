@@ -1,5 +1,5 @@
 <template>
-    <div class="top-0 absolute w-full text-center">
+    <div class="top-0 absolute w-full text-center xs:text-2xl">
         <p
             v-if="autoUpdateInfo?.status == 'ready'"
             class="bg-red-300"

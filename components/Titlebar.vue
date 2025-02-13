@@ -1,41 +1,41 @@
 <template>
     <div
-        class="flex justify-between items-center bg-sexfm sex-shadow p-2"
+        class="flex justify-between items-center bg-sexfm sex-shadow p-2 xs:p-4"
         data-tauri-drag-region
     >
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 xs:gap-2">
             <span
                 data-tauri-drag-region
-                class="mr-1 text-white text-lg"
+                class="mr-1 text-white text-lg xs:text-3xl"
             >SexFM</span>
             <div
                 class="border button"
                 @click="popups.settings = !popups.settings"
             >
-                <Icon name="material-symbols:tools-wrench-outline-sharp" />
+                <SexIcon name="material-symbols:tools-wrench-outline-sharp" />
             </div>
         </div>
 
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 xs:gap-2">
             <div
                 class="border button"
                 @click="popups.help = !popups.help"
             >
-                <Icon name="material-symbols:question-mark" />
+                <SexIcon name="material-symbols:question-mark" />
             </div>
             <div
                 v-if="!app.isWeb"
                 class="border button"
                 @click="minimize"
             >
-                <Icon name="material-symbols:minimize" />
+                <SexIcon name="material-symbols:minimize" />
             </div>
             <div
                 v-if="!app.isWeb"
                 class="border button"
                 @click="close"
             >
-                <Icon name="material-symbols:close" />
+                <SexIcon name="material-symbols:close" />
             </div>
             <SexLink
                 v-if="isWebDesktop"
@@ -43,7 +43,7 @@
                 :use-style="false"
                 link="https://github.com/PikaDude/SexFM-Player/releases/latest"
             >
-                <Icon name="material-symbols:download-sharp" />
+                <SexIcon name="material-symbols:download-sharp" />
             </SexLink>
             <SexLink
                 v-if="isWebMobile"
@@ -51,7 +51,7 @@
                 :use-style="false"
                 link="https://player.sexfm.live"
             >
-                <Icon name="material-symbols:open-in-new" />
+                <SexIcon name="material-symbols:open-in-new" />
             </SexLink>
         </div>
     </div>
