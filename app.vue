@@ -40,15 +40,7 @@
                             @volume-change="onVolumeChange"
                         />
 
-                        <div
-                            class="flex justify-center items-center gap-2 px-[10px!important] border button"
-                            @click="popups.lastPlayed = true"
-                        >
-                            <Icon
-                                name="material-symbols:menu"
-                            />
-                            <span>Last Played</span>
-                        </div>
+                        <LastPlayedButton />
                     </div>
                 </div>
 
@@ -91,7 +83,6 @@ export default defineComponent({
         return {
             app: useAppStore(),
             metadata: useMetadataStore(),
-            popups: usePopupsStore(),
             settings: useSettingsStore(),
         };
     },
