@@ -85,6 +85,7 @@ export default defineComponent({
             link: [
                 { rel: 'preload', href: '/Jersey10.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
             ],
+            script: [{ 'defer': true, 'data-domain': 'player.sexfm.live', 'src': '/plausible.js', 'data-api': 'https://a.erisly.moe/api/event', 'event-hostname': 'hostname' } as unknown as Record<string, string>], // thanks typescript and plausible and unhead and everyone i love you all
         });
 
         return {

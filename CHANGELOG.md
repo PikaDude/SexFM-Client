@@ -7,6 +7,7 @@
 - Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
 - Made the mute button grey
 - Enabled compilation optimizations to make the binary smaller
+- Added simple privacy-focused analytics powered by [plausible.io](https://plausible.io)
 - Various major internal improvements
 
 ## v1.1.0
