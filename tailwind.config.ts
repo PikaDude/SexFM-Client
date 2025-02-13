@@ -22,6 +22,9 @@ export default {
             dropShadow: {
                 sex: '0 8px 8px rgba(0, 0, 0, 0.5)',
             },
+            screens: {
+                xs: '400px',
+            },
         },
     },
     plugins: [],

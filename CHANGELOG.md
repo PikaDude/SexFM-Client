@@ -1,5 +1,16 @@
 # SexFM Player Changelog
 
+## v1.2.0
+- Added web browser support
+- Better handle the API sending a non-existent song
+- Improved stream reloading in terms of performance and edge-cases
+- Fixed a bug where pausing and playing the radio ignored whether it was supposed to be muted
+- Made the mute button grey
+- Enabled compilation optimizations to make the binary smaller
+- Added simple privacy-focused analytics powered by [plausible.io](https://plausible.io)
+- Added logic to resume playback if the audio stream abruptly ends... why does this happen
+- Various major internal improvements
+
 ## v1.1.0
 - Renamed all references of "Client" to "Player"
 - Made buttons look more Sex... FM

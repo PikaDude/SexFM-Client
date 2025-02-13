@@ -1,13 +1,13 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "SexFM Player",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "identifier": "live.sexfm",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "yarn dev",
-    "beforeBuildCommand": "yarn generate"
+    "beforeBuildCommand": "yarn generate --tauri"
   },
   "app": {
     "windows": [

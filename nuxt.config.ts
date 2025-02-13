@@ -1,8 +1,14 @@
 import { defineNuxtConfig } from 'nuxt/config';
+import pkg from './package.json';
+
+const TAURI = process.argv.includes('--tauri');
+
+const modules = ['@nuxt/eslint', '@nuxt/icon', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'vue-types-nuxt'];
+if (!TAURI) modules.push('@nuxtjs/device');
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxtjs/tailwindcss', 'vue-types-nuxt'],
+    modules,
 
     // Enable SSG
     // NOTE: we do SSG with SSR enabled https://nuxt.com/docs/getting-started/deployment#static-hosting
@@ -10,6 +16,12 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
 
     css: ['~/assets/global.css'],
+
+    runtimeConfig: {
+        public: {
+            appVersion: pkg.version,
+        },
+    },
 
     // Enables the development server to be discoverable by other devices when running on iOS physical devices
     devServer: { host: process.env.TAURI_DEV_HOST || 'localhost' },
