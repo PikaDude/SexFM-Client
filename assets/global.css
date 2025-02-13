@@ -21,7 +21,7 @@ body {
 }
 
 .sex-border {
-    @apply box-border border-4 border-sexfm-400;
+    @apply box-border border-4 border-sexfm-400 xs:border-[6px];
     border-style: ridge;
 }
 
@@ -42,8 +42,14 @@ body {
     outline-width: 1.5px;
 }
 
+@media (min-width: 400px) {
+    .sex-outline {
+        outline-width: 2px;
+    }
+}
+
 .button {
-    @apply flex justify-center items-center bg-gradient-to-b from-white active:from-sexfm-400 via-white to-sexfm-400 active:to-white p-0.5 border-sexfm-500 hover:border-sexfm-300 active:border-sexfm-500 rounded-full hover:text-sexfm-300 active:text-sexfm-600 cursor-pointer;
+    @apply flex justify-center items-center bg-gradient-to-b from-white active:from-sexfm-400 via-white to-sexfm-400 active:to-white p-0.5 border-sexfm-500 hover:border-sexfm-300 active:border-sexfm-500 rounded-full hover:text-sexfm-300 active:text-sexfm-600 cursor-pointer border xs:border-2;
 }
 
 .pixelated {
@@ -51,7 +57,7 @@ body {
 }
 
 select {
-    @apply border-2 border-sexfm-300;
+    @apply border-2 border-sexfm-300 xs:border-[3px];
 }
 
 ::-webkit-scrollbar {

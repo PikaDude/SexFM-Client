@@ -15,8 +15,11 @@
                 @change="settings.toggleVisualizer"
             >
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-            <label for="audio-format">Audio Format:</label>
+        <div class="flex flex-wrap items-center">
+            <label
+                for="audio-format"
+                class="mr-1"
+            >Audio Format:</label>
             <select
                 ref="audioFormat"
                 name="audio-format"

@@ -1,7 +1,7 @@
 <template>
     <div
-        class="border-2 button"
-        :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer' }"
+        class="button"
+        :style="{ cursor: (!paused && loading) ? 'wait' : 'pointer', borderWidth: '3px' }"
     >
         <SexIcon
             v-show="paused"

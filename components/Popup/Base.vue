@@ -14,7 +14,7 @@
             </div>
 
             <span
-                class="border button xs:text-2xl"
+                class="button xs:text-2xl"
                 @click="close"
             >{{ closeMessage }}</span>
         </div>

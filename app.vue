@@ -14,7 +14,7 @@
                     <AllPopups />
 
                     <!-- Player -->
-                    <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full">
+                    <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full xs:px-8">
                         <canvas
                             v-show="settings.visualizer"
                             ref="bars"
@@ -26,7 +26,7 @@
                         <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
                             <Banner />
 
-                            <Logo class="pb-1 w-4/5" />
+                            <Logo class="pb-1 w-4/5 xs:w-full" />
 
                             <NowPlaying />
 
