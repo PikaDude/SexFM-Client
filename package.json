@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxt/icon": "1.10.3",
+    "@nuxtjs/device": "3.2.4",
     "@pinia/nuxt": "0.10.1",
     "@tauri-apps/api": "2.2.0",
     "@tauri-apps/plugin-updater": "2.5.0",

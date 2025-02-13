@@ -3,7 +3,7 @@ import pkg from './package.json';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'vue-types-nuxt'],
+    modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxtjs/device', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'vue-types-nuxt'],
 
     // Enable SSG
     // NOTE: we do SSG with SSR enabled https://nuxt.com/docs/getting-started/deployment#static-hosting
