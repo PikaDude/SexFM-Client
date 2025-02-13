@@ -8,6 +8,7 @@
 - Made the mute button grey
 - Enabled compilation optimizations to make the binary smaller
 - Added simple privacy-focused analytics powered by [plausible.io](https://plausible.io)
+- Added logic to resume playback if the audio stream abruptly ends... why does this happen
 - Various major internal improvements
 
 ## v1.1.0

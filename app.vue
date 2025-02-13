@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-center h-screen">
+    <div class="flex justify-center items-center h-screen">
         <!-- Shadow -->
         <div class="flex justify-center items-center h-auto max-h-screen aspect-[284/427] select-none">
             <NuxtRouteAnnouncer />
@@ -14,7 +14,7 @@
                     <AllPopups />
 
                     <!-- Player -->
-                    <div class="relative flex flex-col justify-center items-center gap-2 px-4 pt-4 pb-2 w-full h-full xs:px-8">
+                    <div class="relative flex flex-col justify-center items-center gap-2 px-4 xs:px-8 pt-4 pb-2 w-full h-full">
                         <canvas
                             v-show="settings.visualizer"
                             ref="bars"
@@ -63,6 +63,7 @@
                     crossorigin="use-credentials"
                     preload="none"
                     @play="play"
+                    @ended="play"
                 />
             </div>
         </div>
