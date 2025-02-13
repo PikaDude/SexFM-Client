@@ -1,6 +1,6 @@
 # SexFM Player Changelog
 
-## Dev (Unreleased)
+## v1.2.0
 - Added web browser support
 - Better handle the API sending a non-existent song
 - Improved stream reloading in terms of performance and edge-cases

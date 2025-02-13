@@ -1,6 +1,6 @@
 <template>
     <PopupBase
-        title="SexFM Desktop Player"
+        title="SexFM Player"
         close-message="Awesome, I fucking love SexFM"
     >
         <AutoUpdateMessage />
@@ -13,7 +13,7 @@
         </p>
         <br>
         <p>
-            This is an Unofficial SexFM desktop player made by <SexLink
+            This is an Unofficial SexFM Player made by <SexLink
                 title="i don't really use social media anymore and don't have anything else to link"
                 link="https://bsky.app/profile/pikadude.bsky.social"
                 text="PikaDude"
