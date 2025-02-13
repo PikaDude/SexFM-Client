@@ -45,8 +45,22 @@
             >
                 <SexIcon name="material-symbols:download-sharp" />
             </SexLink>
+            <div
+                v-if="isWebMobile && !isInlineFrame && !isFullscreen"
+                class="border button"
+                @click="fullscreen"
+            >
+                <SexIcon name="material-symbols:fullscreen" />
+            </div>
+            <div
+                v-if="isWebMobile && !isInlineFrame &&isFullscreen"
+                class="border button"
+                @click="fullscreen"
+            >
+                <SexIcon name="material-symbols:fullscreen-exit" />
+            </div>
             <SexLink
-                v-if="isWebMobile"
+                v-if="isWebMobile && isInlineFrame"
                 class="border button"
                 :use-style="false"
                 link="https://player.sexfm.live"
@@ -68,13 +82,27 @@ export default defineComponent({
             autoUpdate: useAutoUpdateStore(),
         };
     },
+    data() {
+        return {
+            isFullscreen: false,
+        };
+    },
     computed: {
         isWebDesktop() {
-            return (this.app.isWeb && this.$device.isDesktop);
+            return this.app.isWeb && this.$device.isDesktop;
         },
         isWebMobile() {
-            return (this.app.isWeb && this.$device.isMobileOrTablet);
+            return this.app.isWeb && this.$device.isMobileOrTablet;
         },
+        isInlineFrame() {
+            return window.self != window.top;
+        },
+    },
+    mounted() {
+        document.addEventListener('fullscreenchange', this.onFullscreenChange);
+    },
+    beforeUnmount() {
+        document.removeEventListener('fullscreenchange', this.onFullscreenChange);
     },
     methods: {
         async close() {
@@ -83,6 +111,14 @@ export default defineComponent({
         },
         minimize() {
             getCurrentWindow().minimize();
+        },
+        fullscreen() {
+            if (document.fullscreenElement) document.exitFullscreen();
+            else document.documentElement.requestFullscreen();
+        },
+
+        onFullscreenChange() {
+            this.isFullscreen = document.fullscreenElement != null;
         },
     },
 });
