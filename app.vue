@@ -64,6 +64,7 @@
                     preload="none"
                     @play="play"
                     @ended="play"
+                    @playing="onPlaying"
                 />
             </div>
         </div>
@@ -73,6 +74,12 @@
 <script lang="ts">
 import { useAVBars } from 'vue-audio-visual';
 
+declare global {
+    interface Window {
+        plausible: (arg: string) => void
+    }
+}
+
 export default defineComponent({
     setup() {
         useHead({
@@ -80,7 +87,10 @@ export default defineComponent({
             link: [
                 { rel: 'preload', href: '/Jersey10.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
             ],
-            script: [{ 'defer': true, 'data-domain': 'player.sexfm.live', 'src': '/a.js', 'data-api': 'https://a.erisly.moe/api/event', 'event-hostname': 'hostname' } as unknown as Record<string, string>], // thanks typescript and plausible and unhead and everyone i love you all
+            script: [
+                { 'defer': true, 'data-domain': 'player.sexfm.live', 'src': '/a.js', 'data-api': 'https://a.erisly.moe/api/event', 'event-hostname': 'hostname', 'event-iframe': 'iframe' } as unknown as Record<string, string>, // thanks typescript and plausible and unhead and everyone i love you all
+                { innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }` },
+            ],
         });
 
         return {
@@ -94,9 +104,13 @@ export default defineComponent({
             paused: true,
             loading: false,
             secondPlay: false,
+            startLoading: 0,
 
             abortAnimationFrame: false,
             visualiserInitialized: false,
+
+            minutes: 0,
+            interval: null as NodeJS.Timeout | null,
         };
     },
     computed: {
@@ -124,14 +138,17 @@ export default defineComponent({
 
         this.initializePlayer();
 
-        this.metadata.fetch();
+        this.metadata.initialize();
         this.metadata.setMediaSession();
 
         this.abortAnimationFrame = false;
         requestAnimationFrame(this.onFrame);
+
+        this.interval = setInterval(this.onMinute, 1000 * 60);
     },
     beforeUnmount() {
         this.abortAnimationFrame = true;
+        this.metadata.unmount();
     },
     methods: {
         playpause() {
@@ -173,6 +190,10 @@ export default defineComponent({
             this.player?.load();
             this.initializePlayer();
             this.player?.play();
+            this.startLoading = Date.now();
+        },
+        onPlaying() {
+            this.metadata.delay = Date.now() - this.startLoading;
         },
 
         onFrame() {
@@ -192,6 +213,13 @@ export default defineComponent({
                 this.player.volume = this.settings.volume;
                 this.player.muted = false;
                 this.settings.muted = false;
+            }
+        },
+        onMinute() {
+            if (!this.player?.paused) this.minutes++;
+            if (this.minutes >= 10) {
+                window.plausible('listen10');
+                this.minutes = 0;
             }
         },
     },

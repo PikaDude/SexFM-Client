@@ -5,11 +5,11 @@
     >
         <ol class="select-text list-decimal list-inside">
             <li
-                v-for="(song, i) in metadata.metadata['last-played']"
+                v-for="(song, i) in metadata.tracks.slice(1)"
                 :key="i"
             >
-                {{ song.title }} by {{ song.artist }}
-                <hr v-if="i != metadata.metadata['last-played'].length - 1">
+                {{ song.replace(' - ', ' by ') }}
+                <hr v-if="i != metadata.tracks.length - 1">
             </li>
         </ol>
     </PopupBase>

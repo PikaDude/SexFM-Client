@@ -27,7 +27,7 @@
         </p>
         <br>
         <p>
-            Some styles/code/assets were borrowed from the official website that was made by <SexLink
+            Some styles/code/assets were borrowed from or created by <SexLink
                 link="https://dotagotchi.com/"
                 text="Dot"
             />.
