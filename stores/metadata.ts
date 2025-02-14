@@ -2,53 +2,63 @@ import { defineStore } from 'pinia';
 
 export const useMetadataStore = defineStore('metadataStore', {
     state: () => ({
-        metadata: {
-            'current-track': {
-                title: 'Unknown Song',
-                artist: 'Unknown Artist',
-            },
-            'last-played': [],
-        } as APIData,
-        refreshTimeout: undefined as undefined | NodeJS.Timeout,
+        tracks: [] as string[],
+        eventSource: null as EventSource | null,
+        justOpened: true,
+
+        delay: 0 as number,
+
+        addTimeouts: [] as NodeJS.Timeout[],
+        openTimeout: null as NodeJS.Timeout | null,
+        reconnectTimeout: null as NodeJS.Timeout | null,
     }),
+    getters: {
+        current: state => state.tracks[0]?.split(' - ').reverse() || ['Unknown Song', 'Unknown Artist'],
+    },
     actions: {
-        async fetch() {
-            clearTimeout(this.refreshTimeout);
-            this.refreshTimeout = undefined;
+        initialize() {
+            this.justOpened = true;
+            this.tracks = [];
 
-            // insane amounts of error handling just in case. this api loves being weird
-            try {
-                const response = await fetch('https://api.live365.com/station/a25222').catch(this.queueRefresh);
-                if (!response) {
-                    this.queueRefresh('empty response');
-                    return;
-                }
-                const newData = await response.json().catch(this.queueRefresh) as (APIData | undefined);
-                if (!newData) {
-                    this.queueRefresh('empty json');
-                    return;
-                }
-
-                // what's the worst that could happen if we get unexpected data
-                if (this.metadata['last-played'][0]?.title != newData['current-track']?.title && newData['current-track']?.title != null) this.metadata = newData;
-            }
-            catch (e) {
-                this.queueRefresh(e);
-                return;
-            }
-
-            this.queueRefresh();
-            this.setMediaSession();
+            this.eventSource = new EventSource('https://a.erisly.moe/radio');
+            this.eventSource.addEventListener('error', this.onError);
+            this.eventSource.addEventListener('message', this.onMessage);
+            this.eventSource.addEventListener('open', this.onOpen);
         },
-        queueRefresh(error?: Error | unknown) {
-            if (error) console.error(error);
-            if (this.refreshTimeout == undefined) this.refreshTimeout = setTimeout(this.fetch, 5000);
+        unmount() {
+            if (this.reconnectTimeout) clearTimeout(this.reconnectTimeout);
+            if (this.openTimeout) clearTimeout(this.openTimeout);
+            for (const t of this.addTimeouts) clearTimeout(t);
+            this.addTimeouts = [];
+
+            this.eventSource?.removeEventListener('error', this.onError);
+            this.eventSource?.removeEventListener('message', this.onMessage);
+            this.eventSource?.removeEventListener('open', this.onOpen);
+            this.eventSource?.close();
+        },
+        onError() {
+            if (this.eventSource?.readyState == 2) this.reconnectTimeout = setTimeout(() => this.initialize(), 5000);
+        },
+        onMessage(message: MessageEvent) {
+            console.log('Received', message.data);
+
+            const push = () => {
+                this.tracks.unshift(message.data);
+                if (this.tracks.length > 6) this.tracks.pop();
+                this.setMediaSession();
+            };
+            if (this.justOpened) push();
+            else this.addTimeouts.push(setTimeout(push, (1000 * 30) + this.delay));
+        },
+        onOpen() {
+            this.openTimeout = setTimeout(() => this.justOpened = false, 3000);
         },
         setMediaSession() {
             if ('mediaSession' in navigator) {
+                const [title, artist] = this.current;
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: this.metadata['current-track'].title,
-                    artist: this.metadata['current-track'].artist,
+                    title,
+                    artist,
                     artwork: [
                         {
                             src: '/128x128.png',

@@ -1,6 +1,7 @@
 # SexFM Player Changelog
 
 ## v1.3.0
+- Created an infinitely more accurate metadata system
 - Added custom installer images
 - Tweaked analytics
 

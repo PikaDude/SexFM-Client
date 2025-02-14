@@ -64,6 +64,7 @@
                     preload="none"
                     @play="play"
                     @ended="play"
+                    @playing="onPlaying"
                 />
             </div>
         </div>
@@ -94,6 +95,7 @@ export default defineComponent({
             paused: true,
             loading: false,
             secondPlay: false,
+            startLoading: 0,
 
             abortAnimationFrame: false,
             visualiserInitialized: false,
@@ -124,7 +126,7 @@ export default defineComponent({
 
         this.initializePlayer();
 
-        this.metadata.fetch();
+        this.metadata.initialize();
         this.metadata.setMediaSession();
 
         this.abortAnimationFrame = false;
@@ -132,6 +134,7 @@ export default defineComponent({
     },
     beforeUnmount() {
         this.abortAnimationFrame = true;
+        this.metadata.unmount();
     },
     methods: {
         playpause() {
@@ -173,6 +176,10 @@ export default defineComponent({
             this.player?.load();
             this.initializePlayer();
             this.player?.play();
+            this.startLoading = Date.now();
+        },
+        onPlaying() {
+            this.metadata.delay = Date.now() - this.startLoading;
         },
 
         onFrame() {
