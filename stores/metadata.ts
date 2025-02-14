@@ -40,8 +40,6 @@ export const useMetadataStore = defineStore('metadataStore', {
             if (this.eventSource?.readyState == 2) this.reconnectTimeout = setTimeout(() => this.initialize(), 5000);
         },
         onMessage(message: MessageEvent) {
-            console.log('Received', message.data);
-
             const push = () => {
                 this.tracks.unshift(message.data);
                 if (this.tracks.length > 6) this.tracks.pop();
