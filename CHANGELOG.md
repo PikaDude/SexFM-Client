@@ -2,6 +2,7 @@
 
 ## v1.3.0
 - Added custom installer images
+- Tweaked analytics
 
 ## v1.2.0
 - Added web browser support
