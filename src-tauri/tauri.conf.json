@@ -37,7 +37,17 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "createUpdaterArtifacts": true
+    "createUpdaterArtifacts": true,
+    "windows": {
+      "nsis": {
+        "headerImage": "banners/150x57.bmp",
+        "sidebarImage": "banners/164x314.bmp"
+      },
+      "wix": {
+        "bannerPath": "banners/493x58.bmp",
+        "dialogImagePath": "banners/493x312.bmp"
+      }
+    }
   },
   "plugins": {
     "updater": {

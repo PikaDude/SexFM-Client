@@ -1,5 +1,8 @@
 # SexFM Player Changelog
 
+## v1.3.0
+- Added custom installer images
+
 ## v1.2.0
 - Added web browser support
 - Better handle the API sending a non-existent song
