@@ -27,6 +27,7 @@
                 min="0"
                 step="0.01"
                 @input="onVolumeChange"
+                @change="settings.setVolume"
             >
         </div>
     </div>
@@ -52,7 +53,7 @@ export default defineComponent({
 
 <style scoped>
 input[type="range"] {
-    @apply bg-gray-300 h-8 xs:h-10 w-32 xs:w-40 overflow-hidden appearance-none;
+    @apply bg-gray-300 w-32 xs:w-40 h-8 xs:h-10 overflow-hidden appearance-none;
     clip-path: polygon(100% 0, 0 100%, 100% 100%);
 }
 
