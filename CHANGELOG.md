@@ -2,6 +2,7 @@
 
 ## Dev (Unreleased)
 - Added Discord Rich Presence integration
+- Changed the auto-updater to use the NSIS installer
 
 ## v1.3.2
 - Fixed artist and title information in the Last Played popup being swapped
