@@ -1,7 +1,10 @@
 # SexFM Player Changelog
 
+## v1.3.2
+- Fixed artist and title information in the Last Played popup being swapped
+
 ## v1.3.1
-- Fix volume not being saved
+- Fixed volume not being saved
 
 ## v1.3.0
 - Created an infinitely more accurate metadata system

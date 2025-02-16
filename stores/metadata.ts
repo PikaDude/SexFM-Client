@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useMetadataStore = defineStore('metadataStore', {
     state: () => ({
-        tracks: [] as string[],
+        tracks: [] as { artist: string, title: string }[],
         eventSource: null as EventSource | null,
         justOpened: true,
 
@@ -13,7 +13,7 @@ export const useMetadataStore = defineStore('metadataStore', {
         reconnectTimeout: null as NodeJS.Timeout | null,
     }),
     getters: {
-        current: state => state.tracks[0]?.split(' - ').reverse() || ['Unknown Song', 'Unknown Artist'],
+        current: state => state.tracks[0] || { title: 'Unknown Song', artist: 'Unknown Artist' },
     },
     actions: {
         initialize() {
@@ -41,7 +41,8 @@ export const useMetadataStore = defineStore('metadataStore', {
         },
         onMessage(message: MessageEvent) {
             const push = () => {
-                this.tracks.unshift(message.data);
+                const [artist, title] = message.data.split(' - ');
+                this.tracks.unshift({ artist, title });
                 if (this.tracks.length > 6) this.tracks.pop();
                 this.setMediaSession();
             };
@@ -53,7 +54,7 @@ export const useMetadataStore = defineStore('metadataStore', {
         },
         setMediaSession() {
             if ('mediaSession' in navigator) {
-                const [title, artist] = this.current;
+                const { title, artist } = this.current;
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title,
                     artist,

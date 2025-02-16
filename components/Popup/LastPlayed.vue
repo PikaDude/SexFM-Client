@@ -8,7 +8,7 @@
                 v-for="(song, i) in metadata.tracks.slice(1)"
                 :key="i"
             >
-                {{ song.replace(' - ', ' by ') }}
+                {{ song.title }} by {{ song.artist }}
                 <hr v-if="i != metadata.tracks.length - 1">
             </li>
         </ol>
