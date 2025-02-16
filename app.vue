@@ -95,6 +95,7 @@ export default defineComponent({
 
         return {
             app: useAppStore(),
+            discordRPC: typeof useDiscordRPCStore != 'undefined' ? useDiscordRPCStore() : undefined,
             metadata: useMetadataStore(),
             settings: useSettingsStore(),
         };
@@ -139,7 +140,7 @@ export default defineComponent({
         this.initializePlayer();
 
         this.metadata.initialize();
-        this.metadata.setMediaSession();
+        this.discordRPC?.initialize();
 
         this.abortAnimationFrame = false;
         requestAnimationFrame(this.onFrame);
@@ -159,6 +160,7 @@ export default defineComponent({
                 }
                 else {
                     player.pause();
+                    if (this.discordRPC) this.discordRPC.playing = false;
                 }
             }
         },
@@ -191,6 +193,7 @@ export default defineComponent({
             this.initializePlayer();
             this.player?.play();
             this.startLoading = Date.now();
+            if (this.discordRPC) this.discordRPC.playing = true;
         },
         onPlaying() {
             this.metadata.delay = Date.now() - this.startLoading;

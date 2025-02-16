@@ -10,6 +10,8 @@
     "core:window:allow-start-dragging",
     "core:window:allow-minimize",
     "core:window:allow-close",
+    "drpc:allow-spawn-thread",
+    "drpc:default",
     "shell:default"
   ]
 }

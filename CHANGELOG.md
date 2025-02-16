@@ -1,5 +1,8 @@
 # SexFM Player Changelog
 
+## Dev (Unreleased)
+- Added Discord Rich Presence integration
+
 ## v1.3.2
 - Fixed artist and title information in the Last Played popup being swapped
 

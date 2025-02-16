@@ -6,6 +6,7 @@ export const useSettingsStore = defineStore('settingsStore', {
         muted: false,
         visualizer: true,
         audioFormat: 'MP3' as AudioFormat,
+        discordRPC: true,
     }),
     getters: {
         volumePercentage: state => `${Math.floor(state.volume * 100)}%`,
@@ -15,6 +16,7 @@ export const useSettingsStore = defineStore('settingsStore', {
             this.volume = Number(localStorage.getItem('volume') || '0.5');
             this.visualizer = localStorage.getItem('visualizer') != 'false';
             this.audioFormat = (localStorage.getItem('audioFormat') || 'MP3') as AudioFormat;
+            this.discordRPC = localStorage.getItem('discordRPC') != 'false';
         },
 
         toggleVisualizer() {
@@ -28,6 +30,20 @@ export const useSettingsStore = defineStore('settingsStore', {
         },
         setVolume() {
             localStorage.setItem('volume', this.volume.toString());
+        },
+        async toggleDiscordRPC() {
+            const value = !this.discordRPC;
+            this.discordRPC = value;
+            localStorage.setItem('discordRPC', value.toString());
+
+            if (typeof useDiscordRPCStore != 'undefined') {
+                const discordRPC = useDiscordRPCStore();
+                if (value) {
+                    await discordRPC.initialize();
+                    discordRPC.update();
+                }
+                else discordRPC.destroy();
+            }
         },
     },
 });
