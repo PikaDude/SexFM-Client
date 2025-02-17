@@ -39,18 +39,21 @@ export const useMetadataStore = defineStore('metadataStore', {
         onError() {
             if (this.eventSource?.readyState == 2) this.reconnectTimeout = setTimeout(() => this.initialize(), 5000);
         },
-        onMessage(message: MessageEvent) {
+        onMessage(message: MessageEvent<string>) {
             const push = () => {
                 const [artist, title] = message.data.split(' - ');
                 this.tracks.unshift({ artist, title });
                 if (this.tracks.length > 6) this.tracks.pop();
-                this.setMediaSession();
+                if (!this.justOpened) this.setMediaSession();
             };
             if (this.justOpened) push();
             else this.addTimeouts.push(setTimeout(push, (1000 * 30) + this.delay));
         },
         onOpen() {
-            this.openTimeout = setTimeout(() => this.justOpened = false, 3000);
+            this.openTimeout = setTimeout(() => {
+                this.justOpened = false;
+                this.setMediaSession();
+            }, 3000);
         },
         setMediaSession() {
             if ('mediaSession' in navigator) {
@@ -71,6 +74,11 @@ export const useMetadataStore = defineStore('metadataStore', {
                         },
                     ],
                 });
+            }
+
+            if (typeof useDiscordRPCStore != 'undefined') {
+                const discordRPC = useDiscordRPCStore();
+                discordRPC.update();
             }
         },
     },

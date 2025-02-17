@@ -4,7 +4,9 @@ import pkg from './package.json';
 const TAURI = process.argv.includes('--tauri');
 
 const modules = ['@nuxt/eslint', '@nuxt/icon', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'vue-types-nuxt'];
+const dirs = [];
 if (!TAURI) modules.push('@nuxtjs/device');
+if (TAURI || process.env['NODE_ENV'] == 'development') dirs.push('tauri-only');
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -13,6 +15,10 @@ export default defineNuxtConfig({
     // Enable SSG
     // NOTE: we do SSG with SSR enabled https://nuxt.com/docs/getting-started/deployment#static-hosting
     ssr: true,
+
+    imports: {
+        dirs,
+    },
     devtools: { enabled: true },
 
     css: ['~/assets/global.css'],
