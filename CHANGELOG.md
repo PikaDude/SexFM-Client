@@ -2,6 +2,7 @@
 
 ## Dev (Unreleased)
 - Added Discord Rich Presence integration
+- Added playback error warning
 - Changed the auto-updater to use the NSIS installer
 - Fixed various issues with the app's icons
 

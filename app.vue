@@ -24,7 +24,7 @@
                         />
 
                         <div class="z-10 flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
-                            <Banner />
+                            <Banner :play-error="playError" />
 
                             <Logo class="pb-1 w-4/5 xs:w-full" />
 
@@ -65,6 +65,7 @@
                     @play="play"
                     @ended="play"
                     @playing="onPlaying"
+                    @error="onError"
                 />
             </div>
         </div>
@@ -106,6 +107,7 @@ export default defineComponent({
             loading: false,
             secondPlay: false,
             startLoading: 0,
+            playError: false,
 
             abortAnimationFrame: false,
             visualiserInitialized: false,
@@ -179,6 +181,8 @@ export default defineComponent({
             }
         },
         play() {
+            this.playError = false;
+
             // do NOT call player.play() directly!
             // this exists to catch if the user uses OS media controls to play the player
             // we wanna interrupt that and reload the stream before playing
@@ -197,6 +201,9 @@ export default defineComponent({
         },
         onPlaying() {
             this.metadata.delay = Date.now() - this.startLoading;
+        },
+        onError() {
+            this.playError = true;
         },
 
         onFrame() {
